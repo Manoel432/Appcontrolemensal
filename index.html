@@ -1,0 +1,709 @@
+Aqui está o código com a logo "INSTITUTO IMPACTO" em 3D como plano de fundo, mantendo todas as funcionalidades profissionais de controle de pagamentos.
+
+```html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Instituto Impacto | Controle de Pagamentos Karatê</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Inter', sans-serif;
+    }
+
+    /* FUNDO PRINCIPAL COM LOGO 3D INSTITUTO IMPACTO */
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0f1a 0%, #0c1a24 100%);
+      position: relative;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+    /* LOGO 3D "INSTITUTO IMPACTO" COMO PLANO DE FUNDO ANIMADO */
+    .logo-background-3d {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .logo-3d {
+      text-align: center;
+      transform-style: preserve-3d;
+      animation: floatLogo3D 20s infinite ease-in-out;
+      filter: drop-shadow(0 0 20px rgba(210, 70, 50, 0.3));
+    }
+
+    .logo-3d .instituto {
+      font-size: clamp(3rem, 12vw, 7rem);
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      background: linear-gradient(135deg, #c9a03d, #ffd966, #e0a800, #b8860b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 
+        0 5px 15px rgba(0,0,0,0.5),
+        2px 2px 0px rgba(255,215,0,0.3),
+        -2px -2px 0px rgba(255,100,0,0.2);
+      transform: translateZ(30px) rotateX(8deg);
+      display: block;
+      animation: textGlow 3s infinite alternate;
+    }
+
+    .logo-3d .impacto {
+      font-size: clamp(2.5rem, 10vw, 6rem);
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      background: linear-gradient(135deg, #e63946, #d32f2f, #b91c1c, #ff6b6b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 
+        0 4px 20px rgba(220, 60, 50, 0.6),
+        3px 3px 0px rgba(255,180,0,0.2);
+      transform: translateZ(20px) rotateX(-5deg) translateY(-10px);
+      display: block;
+      margin-top: -0.2em;
+      animation: textPulse 2.5s infinite alternate;
+    }
+
+    /* Efeito 3D de profundidade com camadas */
+    .logo-3d::before {
+      content: "INSTITUTO IMPACTO";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      font-size: clamp(3rem, 12vw, 7rem);
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      background: linear-gradient(135deg, #2a1a0a, #1a0f05);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transform: translateZ(-15px) translateX(8px) translateY(8px);
+      opacity: 0.4;
+      z-index: -1;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    @keyframes floatLogo3D {
+      0% { transform: perspective(800px) rotateX(5deg) rotateY(0deg) translateY(0px); }
+      50% { transform: perspective(800px) rotateX(8deg) rotateY(5deg) translateY(-20px); }
+      100% { transform: perspective(800px) rotateX(5deg) rotateY(0deg) translateY(0px); }
+    }
+
+    @keyframes textGlow {
+      0% { text-shadow: 0 5px 15px rgba(0,0,0,0.5), 2px 2px 0px rgba(255,215,0,0.2), -2px -2px 0px rgba(255,100,0,0.1); }
+      100% { text-shadow: 0 8px 30px rgba(0,0,0,0.7), 4px 4px 0px rgba(255,215,0,0.5), -3px -3px 0px rgba(255,100,0,0.3); }
+    }
+
+    @keyframes textPulse {
+      0% { text-shadow: 0 4px 20px rgba(220, 60, 50, 0.4), 3px 3px 0px rgba(255,180,0,0.1); opacity: 0.9; }
+      100% { text-shadow: 0 8px 35px rgba(220, 60, 50, 0.9), 5px 5px 0px rgba(255,180,0,0.4); opacity: 1; }
+    }
+
+    /* Overlay escuro para contraste do conteúdo */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Partículas flutuantes sutis */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle at 20% 40%, rgba(255,200,100,0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 1;
+      animation: particleDrift 30s linear infinite;
+    }
+
+    @keyframes particleDrift {
+      0% { background-position: 0 0; }
+      100% { background-position: 200px 200px; }
+    }
+
+    /* Container principal glassmorphism */
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: rgba(10, 18, 25, 0.82);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 0, 0.15);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+
+    /* Header com estilo IMPACTO */
+    .hero {
+      background: linear-gradient(105deg, #8b1a1a 0%, #c62828 40%, #1e2a1a 100%);
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid #ffc107;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .hero h1 span {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px 18px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+      letter-spacing: 1px;
+    }
+
+    .hero p {
+      color: #ffecb3;
+      font-weight: 500;
+      font-size: 0.85rem;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    /* formulário refinado */
+    .card-panel {
+      background: rgba(0, 0, 0, 0.45);
+      margin: 1.5rem 1.8rem;
+      padding: 1.4rem 1.8rem;
+      border-radius: 1.5rem;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: flex-end;
+    }
+
+    .input-group {
+      flex: 2;
+      min-width: 200px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #ffd966;
+      margin-bottom: 4px;
+    }
+
+    .input-group input {
+      width: 100%;
+      background: rgba(20, 30, 40, 0.9);
+      border: 1px solid rgba(255, 193, 7, 0.5);
+      padding: 12px 16px;
+      border-radius: 60px;
+      color: white;
+      font-weight: 500;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .input-group input:focus {
+      border-color: #ffc107;
+      box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .btn {
+      border: none;
+      padding: 12px 20px;
+      border-radius: 60px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.1s, filter 0.2s;
+      background: #2c3e2f;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: #c62828;
+      box-shadow: 0 4px 12px rgba(198, 40, 40, 0.5);
+    }
+
+    .btn-primary:hover {
+      background: #8b1a1a;
+      transform: scale(1.02);
+    }
+
+    .btn-secondary {
+      background: #2c3e50;
+      border: 1px solid #ffc10780;
+    }
+
+    .btn-secondary:hover {
+      background: #1e2f3a;
+      transform: translateY(-1px);
+    }
+
+    /* tabela responsiva */
+    .table-wrapper {
+      margin: 1rem 1.5rem 2rem 1.5rem;
+      overflow-x: auto;
+      border-radius: 1.2rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.5rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+      min-width: 1100px;
+    }
+
+    th {
+      background: #1e2a2f;
+      color: #ffdfa5;
+      padding: 12px 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #c62828;
+    }
+
+    td {
+      background: rgba(25, 35, 45, 0.8);
+      padding: 10px 4px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 193, 7, 0.2);
+      color: #f0f0f0;
+    }
+
+    .aluno-nome {
+      font-weight: 700;
+      background: #1e2e3a;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      text-align: left;
+      padding-left: 12px;
+      font-size: 0.85rem;
+    }
+
+    .payment-day input {
+      width: 55px;
+      background: #2d3e48;
+      border: 1px solid #ffb347;
+      border-radius: 30px;
+      padding: 5px 0;
+      text-align: center;
+      color: #ffdd99;
+      font-weight: bold;
+      font-size: 0.7rem;
+    }
+
+    .actions button {
+      background: #a11f1f;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 40px;
+      font-weight: bold;
+      font-size: 0.7rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    .actions button:hover {
+      background: #6e1414;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.7rem;
+      color: #ffdfaa;
+      border-top: 1px solid rgba(255, 193, 7, 0.3);
+      background: rgba(0,0,0,0.3);
+    }
+
+    @media (max-width: 720px) {
+      .dashboard { margin: 5px; }
+      .card-panel { margin: 1rem; padding: 1rem; }
+      .hero h1 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGO 3D INSTITUTO IMPACTO - PLANO DE FUNDO -->
+<div class="logo-background-3d">
+  <div class="logo-3d">
+    <div class="instituto">INSTITUTO</div>
+    <div class="impacto">IMPACTO</div>
+  </div>
+</div>
+<div class="particles"></div>
+
+<div class="dashboard">
+  <div class="hero">
+    <h1>
+      🥋 DOJŌ IMPACTO · CONTROLE DE MENSALIDADES
+      <span>Karatê | Excelência</span>
+    </h1>
+    <p>⚡ Marque o pagamento mensal e registre o dia exato do vencimento/pagamento | Gestão profissional de alunos</p>
+  </div>
+
+  <div class="card-panel">
+    <div class="form-row">
+      <div class="input-group">
+        <label>🏷️ NOME COMPLETO DO ALUNO</label>
+        <input type="text" id="nomeAluno" placeholder="Ex: Kenshin Himura, Sakura Miyagi" autocomplete="off">
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="adicionarAluno()">➕ ADICIONAR ALUNO</button>
+        <button class="btn btn-secondary" onclick="exportarCSV()">📎 EXPORTAR EXCEL (CSV)</button>
+      </div>
+    </div>
+    <div style="font-size: 0.7rem; margin-top: 12px; color:#ffe0b5; opacity:0.9;">
+      💡 Dica: Para cada mês, marque o checkbox e defina o dia do pagamento. O sistema guarda tudo automaticamente.
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="tabelaPagamentos">
+      <thead>
+        <tr>
+          <th style="min-width: 140px;">🥋 ALUNO</th>
+          <th colspan="2">JAN</th><th colspan="2">FEV</th><th colspan="2">MAR</th><th colspan="2">ABR</th>
+          <th colspan="2">MAI</th><th colspan="2">JUN</th><th colspan="2">JUL</th><th colspan="2">AGO</th>
+          <th colspan="2">SET</th><th colspan="2">OUT</th><th colspan="2">NOV</th><th colspan="2">DEZ</th>
+          <th>⚙️</th>
+        </tr>
+        <tr style="background: #0f1a1f;">
+          <th></th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th>✔️</th><th>📅 Dia</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tabelaBody"></tbody>
+    </table>
+  </div>
+  <footer>
+    🧾 INSTITUTO IMPACTO · Sistema avançado de pagamentos · dados salvos automaticamente no navegador
+  </footer>
+</div>
+
+<script>
+  let alunos = [];
+  const mesesNomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+
+  function carregarDados() {
+    const dadosRaw = localStorage.getItem('alunos_impacto_pro');
+    if (dadosRaw) {
+      try {
+        const parsed = JSON.parse(dadosRaw);
+        if (Array.isArray(parsed)) {
+          alunos = parsed.map(aluno => {
+            if (aluno.meses && Array.isArray(aluno.meses)) {
+              const mesesAtualizados = aluno.meses.map(mes => {
+                if (typeof mes === 'object' && mes !== null) {
+                  return {
+                    pago: mes.pago === true,
+                    diaPagamento: (mes.diaPagamento && typeof mes.diaPagamento === 'string') ? mes.diaPagamento : ''
+                  };
+                } else {
+                  return { pago: mes === true, diaPagamento: '' };
+                }
+              });
+              return { nome: aluno.nome, meses: mesesAtualizados };
+            }
+            return criarEstruturaAluno(aluno.nome || "Aluno");
+          });
+        } else {
+          alunos = [];
+        }
+      } catch(e) { alunos = []; }
+    }
+    if (alunos.length === 0) {
+      alunos = [
+        { nome: "Mestre Kenji Tanaka (Impacto)", meses: criarMesesExemplo() },
+        { nome: "Lucas Silva - Faixa Preta", meses: criarMesesExemplo() },
+        { nome: "Ana Carolina Souza", meses: criarMesesExemplo() }
+      ];
+      if(alunos[0]) { 
+        alunos[0].meses[0] = { pago: true, diaPagamento: "10" }; 
+        alunos[0].meses[1] = { pago: true, diaPagamento: "12" };
+        alunos[0].meses[2] = { pago: false, diaPagamento: "" };
+      }
+      if(alunos[1]) { 
+        alunos[1].meses[0] = { pago: false, diaPagamento: "" }; 
+        alunos[1].meses[2] = { pago: true, diaPagamento: "05" };
+      }
+      if(alunos[2]) { 
+        alunos[2].meses[1] = { pago: true, diaPagamento: "22" };
+      }
+    }
+    salvar();
+  }
+
+  function criarMesesExemplo() {
+    let meses = [];
+    for(let i=0;i<12;i++) meses.push({ pago: false, diaPagamento: "" });
+    return meses;
+  }
+
+  function criarEstruturaAluno(nome) {
+    let meses = [];
+    for(let i=0;i<12;i++) meses.push({ pago: false, diaPagamento: "" });
+    return { nome: nome, meses: meses };
+  }
+
+  function salvar() {
+    localStorage.setItem('alunos_impacto_pro', JSON.stringify(alunos));
+  }
+
+  function adicionarAluno() {
+    const nomeInput = document.getElementById('nomeAluno');
+    const nome = nomeInput.value.trim();
+    if (!nome) {
+      alert("❌ Por favor, insira o nome do aluno.");
+      return;
+    }
+    const novoAluno = { nome: nome, meses: [] };
+    for (let i = 0; i < 12; i++) {
+      novoAluno.meses.push({ pago: false, diaPagamento: "" });
+    }
+    alunos.push(novoAluno);
+    salvar();
+    nomeInput.value = '';
+    renderizarTabela();
+  }
+
+  function togglePagamento(indexAluno, mesIndex) {
+    const aluno = alunos[indexAluno];
+    aluno.meses[mesIndex].pago = !aluno.meses[mesIndex].pago;
+    salvar();
+    renderizarTabela();
+  }
+
+  function atualizarDiaPagamento(indexAluno, mesIndex, valor) {
+    let dia = valor.trim();
+    if (dia !== "") {
+      let numDia = parseInt(dia, 10);
+      if (isNaN(numDia) || numDia < 1 || numDia > 31) {
+        alert("⚠️ Dia inválido! Use um número entre 1 e 31.");
+        renderizarTabela();
+        return;
+      }
+      dia = numDia.toString();
+    }
+    alunos[indexAluno].meses[mesIndex].diaPagamento = dia;
+    salvar();
+    renderizarTabela();
+  }
+
+  function removerAluno(index) {
+    if (confirm(`Remover permanentemente o aluno "${alunos[index].nome}"?`)) {
+      alunos.splice(index, 1);
+      salvar();
+      renderizarTabela();
+    }
+  }
+
+  function renderizarTabela() {
+    const tbody = document.getElementById('tabelaBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    for (let i = 0; i < alunos.length; i++) {
+      const aluno = alunos[i];
+      const row = document.createElement('tr');
+
+      const tdNome = document.createElement('td');
+      tdNome.className = 'aluno-nome';
+      tdNome.style.fontWeight = 'bold';
+      tdNome.style.background = "#1e2e3a";
+      tdNome.textContent = aluno.nome;
+      row.appendChild(tdNome);
+
+      for (let m = 0; m < 12; m++) {
+        const mesData = aluno.meses[m];
+        const pago = mesData.pago;
+        const diaValue = mesData.diaPagamento || "";
+
+        // Checkbox
+        const tdCheck = document.createElement('td');
+        tdCheck.className = 'checkbox-cell';
+        tdCheck.style.textAlign = 'center';
+        const checkBox = document.createElement('input');
+        checkBox.type = 'checkbox';
+        checkBox.checked = pago;
+        checkBox.style.transform = 'scale(1.15)';
+        checkBox.style.cursor = 'pointer';
+        checkBox.addEventListener('change', (function(idx, mesIdx) {
+          return function() { togglePagamento(idx, mesIdx); };
+        })(i, m));
+        tdCheck.appendChild(checkBox);
+        row.appendChild(tdCheck);
+
+        // Campo dia
+        const tdDia = document.createElement('td');
+        tdDia.className = 'payment-day';
+        const inputDia = document.createElement('input');
+        inputDia.type = 'text';
+        inputDia.inputMode = 'numeric';
+        inputDia.maxLength = 2;
+        inputDia.placeholder = 'dd';
+        inputDia.value = diaValue;
+        inputDia.style.width = '55px';
+        inputDia.style.textAlign = 'center';
+        inputDia.style.background = '#2d3e48';
+        inputDia.style.border = '1px solid #ffb347';
+        inputDia.style.borderRadius = '20px';
+        inputDia.style.padding = '5px 0';
+        inputDia.style.color = '#ffdd99';
+        inputDia.style.fontWeight = 'bold';
+        
+        inputDia.addEventListener('blur', (function(idx, mesIdx) {
+          return function(e) { 
+            atualizarDiaPagamento(idx, mesIdx, e.target.value);
+          };
+        })(i, m));
+        inputDia.addEventListener('keypress', (function(idx, mesIdx) {
+          return function(e) {
+            if(e.key === 'Enter') {
+              e.preventDefault();
+              atualizarDiaPagamento(idx, mesIdx, e.target.value);
+              e.target.blur();
+            }
+          };
+        })(i, m));
+        
+        tdDia.appendChild(inputDia);
+        row.appendChild(tdDia);
+      }
+
+      const tdAcao = document.createElement('td');
+      tdAcao.className = 'actions';
+      tdAcao.style.textAlign = 'center';
+      const btnExcluir = document.createElement('button');
+      btnExcluir.textContent = '🗑️ EXCLUIR';
+      btnExcluir.style.background = '#b91c1c';
+      btnExcluir.addEventListener('click', (function(idx) {
+        return function() { removerAluno(idx); };
+      })(i));
+      tdAcao.appendChild(btnExcluir);
+      row.appendChild(tdAcao);
+      
+      tbody.appendChild(row);
+    }
+  }
+
+  function exportarCSV() {
+    let csvRows = [];
+    let cabecalho = ['Aluno'];
+    for(let mes of mesesNomes) {
+      cabecalho.push(`${mes} (Status)`, `${mes} (Dia Pagamento)`);
+    }
+    csvRows.push(cabecalho.join(','));
+
+    for(let aluno of alunos) {
+      let linha = [ `"${aluno.nome.replace(/"/g, '""')}"` ];
+      for(let m = 0; m < 12; m++) {
+        const status = aluno.meses[m].pago ? 'Pago' : 'Pendente';
+        let dia = aluno.meses[m].diaPagamento || '';
+        linha.push(status, dia);
+      }
+      csvRows.push(linha.join(','));
+    }
+
+    const blob = new Blob(["\uFEFF" + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `impacto_mensalidades_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function init() {
+    carregarDados();
+    renderizarTabela();
+  }
+
+  window.adicionarAluno = adicionarAluno;
+  window.exportarCSV = exportarCSV;
+  window.togglePagamento = togglePagamento;
+  window.removerAluno = removerAluno;
+  window.atualizarDiaPagamento = atualizarDiaPagamento;
+
+  init();
+</script>
+</body>
+</html>
+```
