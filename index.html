@@ -1,5 +1,4 @@
-
-Aqui está o código com a legenda removida, mantendo todas as melhorias visuais e funcionais do aplicativo refinado.
+Aqui está o código com os botões de "Valor Mensalidade" e "Atualizar" menores e mais compactos, mantendo todas as funcionalidades e o design refinado.
 
 ```html
 <!DOCTYPE html>
@@ -31,6 +30,13 @@ Aqui está o código com a legenda removida, mantendo todas as melhorias visuais
       --border-glow: rgba(255, 215, 0, 0.3);
       --shadow-lg: 0 25px 45px rgba(0, 0, 0, 0.5);
       --transition: all 0.25s ease;
+      --success-green: #2ecc71;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
@@ -163,6 +169,110 @@ Aqui está o código com a legenda removida, mantendo todas as melhorias visuais
     .card-panel:hover {
       border-color: rgba(255, 215, 0, 0.6);
       box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+    }
+
+    /* PAINEL DE FINANÇAS */
+    .finances-panel {
+      background: rgba(0, 0, 0, 0.55);
+      margin: 0 1.8rem 1.6rem 1.8rem;
+      padding: 1rem 2rem;
+      border-radius: 1.5rem;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .finance-control {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .monthly-fee-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.12), rgba(46, 204, 113, 0.03));
+      padding: 6px 15px;
+      border-radius: 50px;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .monthly-fee-box label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-gold);
+    }
+
+    .monthly-fee-box input {
+      background: rgba(10, 20, 28, 0.9);
+      border: 1.5px solid rgba(46, 204, 113, 0.4);
+      padding: 6px 12px;
+      border-radius: 40px;
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+      width: 90px;
+      text-align: center;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .monthly-fee-box input:focus {
+      border-color: var(--success-green);
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.25);
+    }
+
+    .profit-card {
+      background: linear-gradient(135deg, #1a472a, #0e2a1a);
+      padding: 8px 22px;
+      border-radius: 50px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      border: 1px solid var(--accent-gold);
+    }
+
+    .profit-card span:first-child {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-gold-light);
+      letter-spacing: 1px;
+    }
+
+    .profit-card span:last-child {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    .btn-small-success {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-small-success:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
     }
 
     .form-row {
@@ -413,10 +523,12 @@ Aqui está o código com a legenda removida, mantendo todas as melhorias visuais
       body { padding: 12px; }
       .dashboard { margin: 0; }
       .card-panel { margin: 1rem; padding: 1rem; }
+      .finances-panel { margin: 0 1rem 1rem 1rem; flex-direction: column; align-items: stretch; }
       .hero h1 { font-size: 1.2rem; }
       .hero { padding: 1rem; }
       .btn-group { flex-wrap: wrap; }
       .btn { flex: 1; }
+      .monthly-fee-box { flex-wrap: wrap; justify-content: center; }
     }
 
     /* ANIMAÇÃO DE ENTRADA */
@@ -452,6 +564,21 @@ Aqui está o código com a legenda removida, mantendo todas as melhorias visuais
       🥋 DOJŌ IMPACTO SOCIAL · CONTROLE DE MENSALIDADES
       <span>Karatê | Disciplina & Excelência</span>
     </h1>
+  </div>
+
+  <!-- PAINEL FINANCEIRO COM BOTÕES MENORES -->
+  <div class="finances-panel">
+    <div class="finance-control">
+      <div class="monthly-fee-box">
+        <label>💰 VALOR</label>
+        <input type="number" id="valorMensalidade" value="120" step="10" min="0">
+        <button class="btn-small-success" onclick="atualizarValorMensalidade()">✓ ATUALIZAR</button>
+      </div>
+    </div>
+    <div class="profit-card">
+      <span>📊 LUCRO MÊS ATUAL</span>
+      <span id="lucroMensalDisplay">R$ 0,00</span>
+    </div>
   </div>
 
   <div class="card-panel">
@@ -516,8 +643,10 @@ Aqui está o código com a legenda removida, mantendo todas as melhorias visuais
 <script>
   let alunos = [];
   let filtroTexto = "";
+  let valorMensalidade = 120;
   const mesesNomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-  const STORAGE_KEY = "impacto_social_v13";
+  const STORAGE_KEY = "impacto_social_v14";
+  const STORAGE_VALOR_KEY = "impacto_social_valor";
 
   // ========== ORDENAÇÃO ALFABÉTICA ==========
   function ordenarAlunos() {
@@ -526,6 +655,48 @@ Aqui está o código com a legenda removida, mantendo todas as melhorias visuais
       const nomeB = b.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       return nomeA < nomeB ? -1 : nomeA > nomeB ? 1 : 0;
     });
+  }
+
+  function carregarValorMensalidade() {
+    const valorSalvo = localStorage.getItem(STORAGE_VALOR_KEY);
+    if (valorSalvo !== null && !isNaN(parseFloat(valorSalvo))) {
+      valorMensalidade = parseFloat(valorSalvo);
+    } else {
+      valorMensalidade = 120;
+    }
+    document.getElementById('valorMensalidade').value = valorMensalidade;
+  }
+
+  function atualizarValorMensalidade() {
+    const inputValor = document.getElementById('valorMensalidade');
+    let novoValor = parseFloat(inputValor.value);
+    if (isNaN(novoValor) || novoValor < 0) {
+      alert("Por favor, insira um valor válido (número positivo)");
+      inputValor.value = valorMensalidade;
+      return;
+    }
+    valorMensalidade = novoValor;
+    localStorage.setItem(STORAGE_VALOR_KEY, valorMensalidade);
+    alert(`✅ Valor da mensalidade atualizado para R$ ${valorMensalidade.toFixed(2)}`);
+    calcularTotalLucroMensal();
+  }
+
+  function calcularTotalLucroMensal() {
+    let totalPagosMesAtual = 0;
+    const mesAtual = new Date().getMonth();
+    
+    for (let aluno of alunos) {
+      if (aluno.meses && aluno.meses[mesAtual] && aluno.meses[mesAtual].pago === true) {
+        totalPagosMesAtual++;
+      }
+    }
+    
+    const lucroTotal = totalPagosMesAtual * valorMensalidade;
+    const displayElement = document.getElementById('lucroMensalDisplay');
+    if (displayElement) {
+      displayElement.innerHTML = `R$ ${lucroTotal.toFixed(2).replace('.', ',')}`;
+    }
+    return lucroTotal;
   }
 
   function carregarDados() {
@@ -591,6 +762,7 @@ Aqui está o código com a legenda removida, mantendo todas as melhorias visuais
   function salvar() {
     ordenarAlunos();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(alunos));
+    calcularTotalLucroMensal();
   }
 
   function adicionarAluno() {
@@ -796,8 +968,10 @@ Aqui está o código com a legenda removida, mantendo todas as melhorias visuais
   }
 
   function init() {
+    carregarValorMensalidade();
     carregarDados();
     renderizarTabela();
+    calcularTotalLucroMensal();
     const campoPesquisa = document.getElementById('pesquisaAluno');
     campoPesquisa.addEventListener('input', pesquisarAluno);
     atualizarInfoPesquisa();
@@ -810,6 +984,7 @@ Aqui está o código com a legenda removida, mantendo todas as melhorias visuais
   window.atualizarDiaPagamento = atualizarDiaPagamento;
   window.pesquisarAluno = pesquisarAluno;
   window.limparPesquisa = limparPesquisa;
+  window.atualizarValorMensalidade = atualizarValorMensalidade;
 
   init();
 </script>
