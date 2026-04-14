@@ -1,4 +1,4 @@
-Aqui está o código com os botões de "Valor Mensalidade" e "Atualizar" menores e mais compactos, mantendo todas as funcionalidades e o design refinado.
+Aqui está o código com todos os nomes de exemplo removidos, começando com a lista de alunos totalmente vazia, mantendo todas as funcionalidades e botões menores.
 
 ```html
 <!DOCTYPE html>
@@ -645,7 +645,7 @@ Aqui está o código com os botões de "Valor Mensalidade" e "Atualizar" menores
   let filtroTexto = "";
   let valorMensalidade = 120;
   const mesesNomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-  const STORAGE_KEY = "impacto_social_v14";
+  const STORAGE_KEY = "impacto_social_v15";
   const STORAGE_VALOR_KEY = "impacto_social_valor";
 
   // ========== ORDENAÇÃO ALFABÉTICA ==========
@@ -726,23 +726,7 @@ Aqui está o código com os botões de "Valor Mensalidade" e "Atualizar" menores
         }
       } catch(e) { alunos = []; }
     }
-    if (alunos.length === 0) {
-      alunos = [
-        { nome: "Ana Carolina Souza", meses: criarMesesExemplo() },
-        { nome: "Beatriz Martins", meses: criarMesesExemplo() },
-        { nome: "Carlos Eduardo", meses: criarMesesExemplo() },
-        { nome: "Fernanda Lima", meses: criarMesesExemplo() },
-        { nome: "Gabriel Santos", meses: criarMesesExemplo() },
-        { nome: "Lucas Silva", meses: criarMesesExemplo() },
-        { nome: "Mestre Kenji Tanaka", meses: criarMesesExemplo() },
-        { nome: "Rafael Oliveira", meses: criarMesesExemplo() }
-      ];
-      if(alunos[0]) { alunos[0].meses[1] = { pago: true, diaPagamento: "22" }; }
-      if(alunos[1]) { alunos[1].meses[3] = { pago: true, diaPagamento: "15" }; }
-      if(alunos[4]) { alunos[4].meses[2] = { pago: true, diaPagamento: "05" }; }
-      if(alunos[5]) { alunos[5].meses[0] = { pago: true, diaPagamento: "10" }; alunos[5].meses[1] = { pago: true, diaPagamento: "12" }; }
-      if(alunos[6]) { alunos[6].meses[0] = { pago: true, diaPagamento: "08" }; }
-    }
+    // NENHUM ALUNO EXEMPLO CADASTRADO - LISTA INICIALMENTE VAZIA
     ordenarAlunos();
     salvar();
   }
@@ -772,6 +756,14 @@ Aqui está o código com os botões de "Valor Mensalidade" e "Atualizar" menores
       alert("❌ Por favor, insira o nome do aluno.");
       return;
     }
+    
+    // Verificar se já existe aluno com o mesmo nome (case insensitive)
+    const nomeExiste = alunos.some(aluno => aluno.nome.toLowerCase() === nome.toLowerCase());
+    if (nomeExiste) {
+      alert("⚠️ Este aluno já está cadastrado!");
+      return;
+    }
+    
     const novoAluno = { nome: nome, meses: [] };
     for (let i = 0; i < 12; i++) {
       novoAluno.meses.push({ pago: false, diaPagamento: "" });
@@ -939,6 +931,11 @@ Aqui está o código com os botões de "Valor Mensalidade" e "Atualizar" menores
   }
 
   function exportarCSV() {
+    if (alunos.length === 0) {
+      alert("📭 Não há alunos cadastrados para exportar.");
+      return;
+    }
+    
     let csvRows = [];
     let cabecalho = ['Aluno'];
     for(let mes of mesesNomes) {
