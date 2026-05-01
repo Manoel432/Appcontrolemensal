@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -1027,13 +1026,9 @@
 <!-- Modal de Login/PIN -->
 <div id="modalLogin" class="modal login-modal">
   <div class="modal-content">
-    <div style="text-align: center; margin-bottom: 20px;">
-      <div style="font-size: 60px;">🥋</div>
-      <div style="font-size: 28px; font-weight: 900; color: #ffd700;">DOJO</div>
-      <div style="font-size: 18px; font-weight: 700; color: #e53935;">IMPACTO SOCIAL</div>
-      <div style="width: 60px; height: 3px; background: #ffd700; margin: 10px auto;"></div>
-    </div>
-    <p style="text-align: center; margin-bottom: 20px;">Digite seu PIN de acesso para continuar</p>
+    <img src="logo.png" style="width:120px; margin-bottom:15px; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.5);" onerror="this.style.display='none'">
+    <h3>Dojo Impacto Social</h3>
+    <p>Digite seu PIN de acesso para continuar</p>
     <div class="login-error" id="loginError"></div>
     <div class="pin-input">
       <input type="number" maxlength="1" class="pin-digit" data-index="0">
@@ -1041,13 +1036,14 @@
       <input type="number" maxlength="1" class="pin-digit" data-index="2">
       <input type="number" maxlength="1" class="pin-digit" data-index="3">
     </div>
-    <button class="btn btn-primary" onclick="verificarPIN()" style="width:100%;padding:12px; margin-top: 10px;">🔓 Entrar</button>
-    <p style="margin-top:20px;font-size:0.75rem;color:var(--text-gray); text-align: center;">
+    <button class="btn btn-primary" onclick="verificarPIN()" style="width:100%;padding:12px;">🔓 Entrar</button>
+    <p style="margin-top:15px;font-size:0.75rem;color:var(--text-gray);">
       PIN padrão: <strong style="color:var(--accent-gold);">1234</strong> • 
       <a href="#" onclick="redefinirPIN(event)" style="color:var(--success-green);text-decoration:none;">Redefinir PIN</a>
     </p>
   </div>
 </div>
+
 <!-- Dashboard Principal -->
 <div class="dashboard" id="mainDashboard" style="display:none;">
   <div class="hero">
