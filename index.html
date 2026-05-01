@@ -1044,6 +1044,72 @@
   </div>
 </div>
 
+<!-- Modal de Alteração de PIN -->
+<div id="modalAlterarPIN" class="modal">
+  <div class="modal-content" style="max-width:450px;">
+    <div class="modal-header">
+      <h3>🔐 Alterar PIN de Acesso</h3>
+      <button class="modal-close" onclick="fecharModalAlterarPIN()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Passo 1: Confirmar PIN atual -->
+      <div id="stepAtual">
+        <p style="margin-bottom:15px;color:var(--text-gray);font-size:0.85rem;">
+          Para sua segurança, confirme seu PIN atual antes de alterar.
+        </p>
+        <div class="pin-input">
+          <input type="number" maxlength="1" class="pin-digit-confirm" data-index="0">
+          <input type="number" maxlength="1" class="pin-digit-confirm" data-index="1">
+          <input type="number" maxlength="1" class="pin-digit-confirm" data-index="2">
+          <input type="number" maxlength="1" class="pin-digit-confirm" data-index="3">
+        </div>
+        <div class="login-error" id="errorConfirmarPIN"></div>
+        <button class="btn btn-primary" onclick="confirmarPINAtual()" style="width:100%;padding:12px;">
+          ✓ Confirmar PIN Atual
+        </button>
+      </div>
+      
+      <!-- Passo 2: Definir novo PIN -->
+      <div id="stepNovoPIN" style="display:none;">
+        <p style="margin-bottom:15px;color:var(--text-gray);font-size:0.85rem;">
+          Digite seu <strong>novo PIN</strong> (4 dígitos numéricos):
+        </p>
+        <div class="pin-input">
+          <input type="number" maxlength="1" class="pin-digit-novo" data-index="0">
+          <input type="number" maxlength="1" class="pin-digit-novo" data-index="1">
+          <input type="number" maxlength="1" class="pin-digit-novo" data-index="2">
+          <input type="number" maxlength="1" class="pin-digit-novo" data-index="3">
+        </div>
+        <div id="novoPINStrength" style="font-size:0.7rem;margin:8px 0;color:var(--text-gray);"></div>
+        <button class="btn btn-primary" onclick="avançarParaConfirmacao()" style="width:100%;padding:12px;">
+          Próximo →
+        </button>
+      </div>
+      
+      <!-- Passo 3: Confirmar novo PIN -->
+      <div id="stepConfirmarNovo" style="display:none;">
+        <p style="margin-bottom:15px;color:var(--text-gray);font-size:0.85rem;">
+          <strong>Confirme</strong> seu novo PIN digitando novamente:
+        </p>
+        <div class="pin-input">
+          <input type="number" maxlength="1" class="pin-digit-confirmacao" data-index="0">
+          <input type="number" maxlength="1" class="pin-digit-confirmacao" data-index="1">
+          <input type="number" maxlength="1" class="pin-digit-confirmacao" data-index="2">
+          <input type="number" maxlength="1" class="pin-digit-confirmacao" data-index="3">
+        </div>
+        <div class="login-error" id="errorConfirmarNovo"></div>
+        <button class="btn btn-primary" onclick="salvarNovoPIN()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--success-green),var(--success-green-dark));">
+          💾 Salvar Novo PIN
+        </button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModalAlterarPIN()">Cancelar</button>
+      <button class="btn btn-small" onclick="voltarStep()" id="btnVoltarStep" style="display:none;">← Voltar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Dashboard Principal -->
 <div class="dashboard" id="mainDashboard" style="display:none;">
   <div class="hero">
@@ -1148,6 +1214,12 @@ let pinDigitado = "";
 let pesquisaTimeout = null;
 let currentRelatorioMes = null;
 let currentRelatorioAno = null;
+
+// Variáveis para controle do fluxo de alteração de PIN
+let pinAtualDigitado = "";
+let novoPINDigitado = "";
+let confirmacaoPINDigitado = "";
+let stepAtual = 1;
 
 function parseDataPagamento(valor) {
   if (!valor || valor.trim() === "") return { dia: null, mes: null, ano: null };
@@ -1291,18 +1363,396 @@ function restaurarDados(){ const input=document.createElement('input'); input.ty
 function atualizarValorMensalidade(){ let novoValor=parseFloat(document.getElementById('valorMensalidade').value); if(isNaN(novoValor)||novoValor<0){ showToast('❌ Valor inválido!','error'); document.getElementById('valorMensalidade').value=valorMensalidade; return; } valorMensalidade=novoValor; localStorage.setItem(CONFIG.STORAGE_VALOR_KEY,valorMensalidade); calcularTotalLucroMensal(); showToast(`💰 Mensalidade: R$ ${valorMensalidade.toFixed(2).replace('.',',')}`, 'success'); }
 function renderizarTabela(){ const tbody=document.getElementById('tabelaBody'); tbody.innerHTML=''; const mesAtual=new Date().getMonth(); const filtrados=filtrarAlunos(); const totalAlunos=alunos.length; const pagosNoMes=alunos.filter(a=>a.meses[mesAtual]?.pago).length; const progresso=totalAlunos>0?Math.round((pagosNoMes/totalAlunos)*100):0; if(filtrados.length>0){ const rowResumo=tbody.insertRow(); rowResumo.innerHTML=`<td colspan="26" class="month-summary"><div class="month-summary-header"><span class="month-summary-title">📊 ${CONFIG.MESES[mesAtual].toUpperCase()} ${new Date().getFullYear()}</span><div class="progress-bar"><div class="progress-fill" style="width: ${progresso}%"></div></div><span class="progress-text">${pagosNoMes}/${totalAlunos} • ${progresso}%</span><div class="bulk-actions"><button class="btn-small" onclick="marcarTodosPagos(${mesAtual})">✓ Todos Pagos</button><button class="btn-small" style="background:var(--whatsapp-green);" onclick="cobrarPendentes(${mesAtual})">💬 Cobrar Pendentes</button></div></div></td>`; } if(filtrados.length===0){ const row=tbody.insertRow(); const td=row.insertCell(); td.colSpan=26; td.className='no-results'; td.innerHTML=filtroTexto?`🔍 Nenhum para "${filtroTexto}"`:"🥋 Nenhum aluno cadastrado."; return; } filtrados.forEach(aluno=>{ const idxOriginal=alunos.findIndex(a=>a.nome===aluno.nome && a.dataInicio===aluno.dataInicio); if(idxOriginal<0) return; const row=tbody.insertRow(); const tdNome=row.insertCell(); tdNome.className='aluno-info'; tdNome.innerHTML=`<div><div style="font-weight:800;color:var(--accent-gold-light);">${aluno.nome}</div><div class="aluno-detail">📅 ${formatarDataBR(aluno.dataInicio)}<br>📱 ${aluno.whatsapp?formatarWhatsAppDisplay(aluno.whatsapp):'Não cadastrado'}</div></div>`; for(let m=0;m<12;m++){ const pagoMes=aluno.meses[m]?.pago; const atrasadoMes=verificarAtrasoPorMes(aluno, m, new Date().getFullYear()); const tdCheck=row.insertCell(); tdCheck.style.textAlign='center'; const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=pagoMes; cb.onclick=(function(idx,mes){ return ()=>togglePagamento(idx,mes); })(idxOriginal,m); if(atrasadoMes) cb.style.accentColor='var(--danger-red)'; else if(pagoMes) cb.style.accentColor='var(--success-green)'; tdCheck.appendChild(cb); const tdData=row.insertCell(); tdData.className='payment-date'; const inputData=document.createElement('input'); inputData.type='text'; inputData.placeholder='DD/MM'; inputData.value=obterDataPagamentoFormatada(aluno,m); if(atrasadoMes) inputData.classList.add('overdue'); inputData.onblur=(function(idx,mes){ return (e)=>atualizarDataPagamento(idx,mes,e.target.value); })(idxOriginal,m); tdData.appendChild(inputData); } const tdAcao=row.insertCell(); tdAcao.className='actions'; tdAcao.innerHTML=`<button class="whatsapp-btn" onclick="enviarCobrancaWhatsApp(${idxOriginal})">💬 Cobrar</button><button class="edit-btn" onclick="editarAluno(${idxOriginal})">✏️ Editar</button><button class="delete-btn" onclick="removerAluno(${idxOriginal})">🗑️ Excluir</button>`; }); }
 
-document.addEventListener('DOMContentLoaded',()=>{ const hoje=new Date().toISOString().split('T')[0]; document.getElementById('dataInicio').value=hoje; document.getElementById('anoAtual').textContent=new Date().getFullYear(); carregarValorMensalidade(); carregarTema(); verificarLogin(); configurarAtalhosTeclado(); configurarMascaraWhatsapp(); configurarInputsPIN(); document.getElementById('pesquisaAluno').addEventListener('input',()=>{ if(pesquisaTimeout) clearTimeout(pesquisaTimeout); pesquisaTimeout=setTimeout(()=>pesquisarAluno(),300); }); });
-function verificarLogin(){ const pinSalvo=localStorage.getItem(CONFIG.STORAGE_PIN_KEY); if(!pinSalvo) localStorage.setItem(CONFIG.STORAGE_PIN_KEY,CONFIG.PIN_PADRAO); document.getElementById('modalLogin').classList.add('active'); }
-function configurarInputsPIN(){ const inputs=document.querySelectorAll('.pin-digit'); inputs.forEach((input,index)=>{ input.addEventListener('input',(e)=>{ const valor=e.target.value.replace(/\D/g,''); if(valor){ pinDigitado+=valor; if(index<inputs.length-1) inputs[index+1].focus(); if(pinDigitado.length===4) verificarPIN(); } }); input.addEventListener('keydown',(e)=>{ if(e.key==='Backspace' && !e.target.value && index>0){ pinDigitado=pinDigitado.slice(0,-1); inputs[index-1].focus(); } }); input.addEventListener('paste',(e)=>{ e.preventDefault(); const paste=(e.clipboardData||window.clipboardData).getData('text'); const numeros=paste.replace(/\D/g,'').slice(0,4); pinDigitado=numeros; numeros.split('').forEach((num,i)=>{ if(inputs[i]) inputs[i].value=num; }); if(numeros.length===4) verificarPIN(); }); }); }
-function verificarPIN(){ const pinSalvo=localStorage.getItem(CONFIG.STORAGE_PIN_KEY)||CONFIG.PIN_PADRAO; const errorEl=document.getElementById('loginError'); if(pinDigitado===pinSalvo){ errorEl.textContent=''; document.getElementById('modalLogin').classList.remove('active'); document.getElementById('mainDashboard').style.display='block'; carregarDados(); renderizarTabela(); atualizarInfoPesquisa(); showToast('🥋 Bem-vindo ao Dojo Impacto Social!', 'success', 3000); } else { errorEl.textContent='❌ PIN incorreto. Tente novamente.'; pinDigitado=''; document.querySelectorAll('.pin-digit').forEach(input=>input.value=''); document.querySelector('.pin-digit[data-index="0"]').focus(); showToast('🔒 Acesso negado', 'error'); } }
-function redefinirPIN(e){ e.preventDefault(); if(confirm('⚠️ Redefinir PIN para 1234?')){ localStorage.setItem(CONFIG.STORAGE_PIN_KEY,CONFIG.PIN_PADRAO); showToast('🔄 PIN redefinido para 1234', 'success'); } }
-function showToast(msg,tipo='info',duracao=3000){ const c=document.getElementById('toastContainer'); const t=document.createElement('div'); const ic={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'}; t.className=`toast ${tipo}`; t.innerHTML=`<span>${ic[tipo]||'ℹ️'}</span><span>${msg}</span>`; c.appendChild(t); setTimeout(()=>{ t.style.animation='fadeOut 0.3s ease forwards'; setTimeout(()=>t.remove(),300); },duracao); t.onclick=()=>t.remove(); }
-function carregarTema(){ const tema=localStorage.getItem(CONFIG.STORAGE_THEME_KEY); if(tema) document.documentElement.setAttribute('data-theme',tema); atualizarBotaoTema(); }
-function alternarTema(){ const atual=document.documentElement.getAttribute('data-theme')||'dark'; const novo=atual==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',novo); localStorage.setItem(CONFIG.STORAGE_THEME_KEY,novo); showToast(`🌓 Tema ${novo==='dark'?'escuro':'claro'}`, 'info',2000); atualizarBotaoTema(); }
-function atualizarBotaoTema(){ const btn=document.getElementById('themeToggle'); const tema=document.documentElement.getAttribute('data-theme')||'dark'; btn.textContent=tema==='dark'?'☀️ Claro':'🌙 Escuro'; btn.onclick=alternarTema; }
-function configurarAtalhosTeclado(){ document.addEventListener('keydown',(e)=>{ if(['INPUT','TEXTAREA'].includes(e.target.tagName)) return; if(e.ctrlKey||e.metaKey){ switch(e.key.toLowerCase()){ case 'n': e.preventDefault(); document.getElementById('nomeAluno').focus(); showToast('⌨️ Foco no nome','info',1500); break; case 'f': e.preventDefault(); document.getElementById('pesquisaAluno').focus(); showToast('⌨️ Foco na pesquisa','info',1500); break; case 'e': e.preventDefault(); exportarCSV(); break; case 'b': e.preventDefault(); backupDados(); break; case 'r': e.preventDefault(); gerarRelatorioMensal(); break; } } if(e.key==='Escape'){ limparPesquisa(); fecharModalEditar(); } }); }
-function configurarMascaraWhatsapp(){ const aplicar=(input)=>{ let valor=input.value.replace(/\D/g,''); if(valor.length<=10) valor=valor.replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2'); else valor=valor.replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2'); input.value=valor.slice(0,15); }; ['whatsappAluno','editWhatsapp'].forEach(id=>{ const i=document.getElementById(id); if(i){ i.addEventListener('input',()=>aplicar(i)); i.addEventListener('blur',()=>{ i.dataset.raw=i.value.replace(/\D/g,''); }); } }); }
-window.adicionarAluno=adicionarAluno; window.exportarCSV=exportarCSV; window.removerAluno=removerAluno; window.enviarCobrancaWhatsApp=enviarCobrancaWhatsApp; window.editarAluno=editarAluno; window.fecharModalEditar=fecharModalEditar; window.salvarEdicao=salvarEdicao; window.togglePagamento=togglePagamento; window.atualizarDataPagamento=atualizarDataPagamento; window.pesquisarAluno=pesquisarAluno; window.limparPesquisa=limparPesquisa; window.aplicarFiltroStatus=aplicarFiltroStatus; window.atualizarValorMensalidade=atualizarValorMensalidade; window.backupDados=backupDados; window.restaurarDados=restaurarDados; window.verificarPIN=verificarPIN; window.redefinirPIN=redefinirPIN; window.alternarTema=alternarTema; window.gerarRelatorioMensal=gerarRelatorioMensal; window.fecharModalRelatorio=fecharModalRelatorio; window.exportarPDF=exportarPDF; window.marcarTodosPagos=marcarTodosPagos; window.cobrarPendentes=cobrarPendentes; window.atualizarRelatorioPorPeriodo=atualizarRelatorioPorPeriodo; atualizarBotaoTema();
+// Funções de alteração de PIN
+function redefinirPIN(e){
+  e.preventDefault();
+  pinAtualDigitado = "";
+  novoPINDigitado = "";
+  confirmacaoPINDigitado = "";
+  stepAtual = 1;
+  
+  document.querySelectorAll('.pin-digit-confirm, .pin-digit-novo, .pin-digit-confirmacao')
+    .forEach(input => input.value = '');
+  document.getElementById('errorConfirmarPIN').textContent = '';
+  document.getElementById('errorConfirmarNovo').textContent = '';
+  document.getElementById('novoPINStrength').textContent = '';
+  
+  document.getElementById('stepAtual').style.display = 'block';
+  document.getElementById('stepNovoPIN').style.display = 'none';
+  document.getElementById('stepConfirmarNovo').style.display = 'none';
+  document.getElementById('btnVoltarStep').style.display = 'none';
+  
+  setTimeout(() => {
+    document.querySelector('.pin-digit-confirm[data-index="0"]').focus();
+  }, 300);
+  
+  document.getElementById('modalAlterarPIN').classList.add('active');
+}
+
+function fecharModalAlterarPIN(){
+  document.getElementById('modalAlterarPIN').classList.remove('active');
+  pinAtualDigitado = "";
+  novoPINDigitado = "";
+  confirmacaoPINDigitado = "";
+  stepAtual = 1;
+}
+
+function configurarInputsAlteracaoPIN(){
+  document.querySelectorAll('.pin-digit-confirm').forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      const valor = e.target.value.replace(/\D/g, '');
+      if(valor){
+        pinAtualDigitado += valor;
+        if(index < 3) document.querySelectorAll('.pin-digit-confirm')[index+1].focus();
+        if(pinAtualDigitado.length === 4) confirmarPINAtual();
+      }
+    });
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Backspace' && !e.target.value && index > 0){
+        pinAtualDigitado = pinAtualDigitado.slice(0, -1);
+        document.querySelectorAll('.pin-digit-confirm')[index-1].focus();
+      }
+    });
+  });
+  
+  document.querySelectorAll('.pin-digit-novo').forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      const valor = e.target.value.replace(/\D/g, '');
+      if(valor){
+        novoPINDigitado += valor;
+        atualizarIndicadorForcaPIN();
+        if(index < 3) document.querySelectorAll('.pin-digit-novo')[index+1].focus();
+        if(novoPINDigitado.length === 4) {
+          setTimeout(() => avançarParaConfirmacao(), 300);
+        }
+      }
+    });
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Backspace' && !e.target.value && index > 0){
+        novoPINDigitado = novoPINDigitado.slice(0, -1);
+        atualizarIndicadorForcaPIN();
+        document.querySelectorAll('.pin-digit-novo')[index-1].focus();
+      }
+    });
+  });
+  
+  document.querySelectorAll('.pin-digit-confirmacao').forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      const valor = e.target.value.replace(/\D/g, '');
+      if(valor){
+        confirmacaoPINDigitado += valor;
+        if(index < 3) document.querySelectorAll('.pin-digit-confirmacao')[index+1].focus();
+        if(confirmacaoPINDigitado.length === 4) salvarNovoPIN();
+      }
+    });
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Backspace' && !e.target.value && index > 0){
+        confirmacaoPINDigitado = confirmacaoPINDigitado.slice(0, -1);
+        document.querySelectorAll('.pin-digit-confirmacao')[index-1].focus();
+      }
+    });
+  });
+}
+
+function atualizarIndicadorForcaPIN(){
+  const indicator = document.getElementById('novoPINStrength');
+  if(novoPINDigitado.length < 4){
+    indicator.textContent = `${novoPINDigitado.length}/4 dígitos`;
+    indicator.style.color = 'var(--text-gray)';
+    return;
+  }
+  
+  const digitsUnicos = new Set(novoPINDigitado.split('')).size;
+  const sequencial = /^(0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210|1111|2222|3333|4444|5555|6666|7777|8888|9999|0000)$/.test(novoPINDigitado);
+  
+  if(sequencial || digitsUnicos === 1){
+    indicator.textContent = '⚠️ PIN fraco - evite sequências ou repetições';
+    indicator.style.color = 'var(--danger-red)';
+  } else if(digitsUnicos <= 2){
+    indicator.textContent = '🟡 PIN moderado - considere mais variedade';
+    indicator.style.color = 'var(--warning-orange)';
+  } else {
+    indicator.textContent = '✅ PIN forte!';
+    indicator.style.color = 'var(--success-green)';
+  }
+}
+
+function confirmarPINAtual(){
+  const pinSalvo = localStorage.getItem(CONFIG.STORAGE_PIN_KEY) || CONFIG.PIN_PADRAO;
+  const errorEl = document.getElementById('errorConfirmarPIN');
+  
+  if(pinAtualDigitado === pinSalvo){
+    errorEl.textContent = '';
+    document.getElementById('stepAtual').style.display = 'none';
+    document.getElementById('stepNovoPIN').style.display = 'block';
+    document.getElementById('btnVoltarStep').style.display = 'inline-flex';
+    stepAtual = 2;
+    
+    setTimeout(() => {
+      document.querySelector('.pin-digit-novo[data-index="0"]').focus();
+    }, 100);
+  } else {
+    errorEl.textContent = '❌ PIN atual incorreto. Tente novamente.';
+    pinAtualDigitado = '';
+    document.querySelectorAll('.pin-digit-confirm').forEach(input => input.value = '');
+    document.querySelector('.pin-digit-confirm[data-index="0"]').focus();
+    showToast('🔒 PIN atual inválido', 'error');
+  }
+}
+
+function avançarParaConfirmacao(){
+  if(novoPINDigitado.length !== 4){
+    showToast('⚠️ Digite os 4 dígitos do novo PIN', 'warning');
+    return;
+  }
+  
+  if(!/^\d{4}$/.test(novoPINDigitado)){
+    showToast('❌ PIN deve conter apenas 4 números', 'error');
+    return;
+  }
+  
+  document.getElementById('stepNovoPIN').style.display = 'none';
+  document.getElementById('stepConfirmarNovo').style.display = 'block';
+  stepAtual = 3;
+  
+  setTimeout(() => {
+    document.querySelector('.pin-digit-confirmacao[data-index="0"]').focus();
+  }, 100);
+}
+
+function salvarNovoPIN(){
+  const errorEl = document.getElementById('errorConfirmarNovo');
+  
+  if(confirmacaoPINDigitado.length !== 4){
+    errorEl.textContent = '❌ Confirme os 4 dígitos do novo PIN';
+    return;
+  }
+  
+  if(novoPINDigitado !== confirmacaoPINDigitado){
+    errorEl.textContent = '❌ Os PINs não conferem. Tente novamente.';
+    confirmacaoPINDigitado = '';
+    document.querySelectorAll('.pin-digit-confirmacao').forEach(input => input.value = '');
+    document.querySelector('.pin-digit-confirmacao[data-index="0"]').focus();
+    showToast('⚠️ PINs não coincidem', 'warning');
+    return;
+  }
+  
+  const pinSalvo = localStorage.getItem(CONFIG.STORAGE_PIN_KEY) || CONFIG.PIN_PADRAO;
+  if(novoPINDigitado === pinSalvo){
+    errorEl.textContent = '⚠️ Novo PIN igual ao atual. Escolha outro.';
+    showToast('🔄 Escolha um PIN diferente do atual', 'info');
+    return;
+  }
+  
+  localStorage.setItem(CONFIG.STORAGE_PIN_KEY, novoPINDigitado);
+  
+  fecharModalAlterarPIN();
+  showToast('✅ PIN alterado com sucesso! Use seu novo PIN no próximo acesso.', 'success', 5000);
+  
+  pinAtualDigitado = "";
+  novoPINDigitado = "";
+  confirmacaoPINDigitado = "";
+  stepAtual = 1;
+}
+
+function voltarStep(){
+  if(stepAtual === 2){
+    document.getElementById('stepNovoPIN').style.display = 'none';
+    document.getElementById('stepAtual').style.display = 'block';
+    document.getElementById('btnVoltarStep').style.display = 'none';
+    stepAtual = 1;
+    novoPINDigitado = '';
+    document.querySelectorAll('.pin-digit-novo').forEach(input => input.value = '');
+    document.querySelector('.pin-digit-confirm[data-index="0"]').focus();
+  } else if(stepAtual === 3){
+    document.getElementById('stepConfirmarNovo').style.display = 'none';
+    document.getElementById('stepNovoPIN').style.display = 'block';
+    stepAtual = 2;
+    confirmacaoPINDigitado = '';
+    document.querySelectorAll('.pin-digit-confirmacao').forEach(input => input.value = '');
+    document.querySelector('.pin-digit-novo[data-index="0"]').focus();
+  }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{ 
+  const hoje=new Date().toISOString().split('T')[0]; 
+  document.getElementById('dataInicio').value=hoje; 
+  document.getElementById('anoAtual').textContent=new Date().getFullYear(); 
+  carregarValorMensalidade(); 
+  carregarTema(); 
+  verificarLogin(); 
+  configurarAtalhosTeclado(); 
+  configurarMascaraWhatsapp(); 
+  configurarInputsPIN(); 
+  configurarInputsAlteracaoPIN();
+  
+  document.getElementById('pesquisaAluno').addEventListener('input',()=>{ 
+    if(pesquisaTimeout) clearTimeout(pesquisaTimeout); 
+    pesquisaTimeout=setTimeout(()=>pesquisarAluno(),300); 
+  }); 
+});
+
+function verificarLogin(){ 
+  const pinSalvo=localStorage.getItem(CONFIG.STORAGE_PIN_KEY); 
+  if(!pinSalvo) localStorage.setItem(CONFIG.STORAGE_PIN_KEY,CONFIG.PIN_PADRAO); 
+  document.getElementById('modalLogin').classList.add('active'); 
+}
+
+function configurarInputsPIN(){ 
+  const inputs=document.querySelectorAll('.pin-digit'); 
+  inputs.forEach((input,index)=>{ 
+    input.addEventListener('input',(e)=>{ 
+      const valor=e.target.value.replace(/\D/g,''); 
+      if(valor){ 
+        pinDigitado+=valor; 
+        if(index<inputs.length-1) inputs[index+1].focus(); 
+        if(pinDigitado.length===4) verificarPIN(); 
+      } 
+    }); 
+    input.addEventListener('keydown',(e)=>{ 
+      if(e.key==='Backspace' && !e.target.value && index>0){ 
+        pinDigitado=pinDigitado.slice(0,-1); 
+        inputs[index-1].focus(); 
+      } 
+    }); 
+    input.addEventListener('paste',(e)=>{ 
+      e.preventDefault(); 
+      const paste=(e.clipboardData||window.clipboardData).getData('text'); 
+      const numeros=paste.replace(/\D/g,'').slice(0,4); 
+      pinDigitado=numeros; 
+      numeros.split('').forEach((num,i)=>{ 
+        if(inputs[i]) inputs[i].value=num; 
+      }); 
+      if(numeros.length===4) verificarPIN(); 
+    }); 
+  }); 
+}
+
+function verificarPIN(){ 
+  const pinSalvo=localStorage.getItem(CONFIG.STORAGE_PIN_KEY)||CONFIG.PIN_PADRAO; 
+  const errorEl=document.getElementById('loginError'); 
+  if(pinDigitado===pinSalvo){ 
+    errorEl.textContent=''; 
+    document.getElementById('modalLogin').classList.remove('active'); 
+    document.getElementById('mainDashboard').style.display='block'; 
+    carregarDados(); 
+    renderizarTabela(); 
+    atualizarInfoPesquisa(); 
+    showToast('🥋 Bem-vindo ao Dojo Impacto Social!', 'success', 3000); 
+  } else { 
+    errorEl.textContent='❌ PIN incorreto. Tente novamente.'; 
+    pinDigitado=''; 
+    document.querySelectorAll('.pin-digit').forEach(input=>input.value=''); 
+    document.querySelector('.pin-digit[data-index="0"]').focus(); 
+    showToast('🔒 Acesso negado', 'error'); 
+  } 
+}
+
+function showToast(msg,tipo='info',duracao=3000){ 
+  const c=document.getElementById('toastContainer'); 
+  const t=document.createElement('div'); 
+  const ic={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'}; 
+  t.className=`toast ${tipo}`; 
+  t.innerHTML=`<span>${ic[tipo]||'ℹ️'}</span><span>${msg}</span>`; 
+  c.appendChild(t); 
+  setTimeout(()=>{ 
+    t.style.animation='fadeOut 0.3s ease forwards'; 
+    setTimeout(()=>t.remove(),300); 
+  },duracao); 
+  t.onclick=()=>t.remove(); 
+}
+
+function carregarTema(){ 
+  const tema=localStorage.getItem(CONFIG.STORAGE_THEME_KEY); 
+  if(tema) document.documentElement.setAttribute('data-theme',tema); 
+  atualizarBotaoTema(); 
+}
+
+function alternarTema(){ 
+  const atual=document.documentElement.getAttribute('data-theme')||'dark'; 
+  const novo=atual==='dark'?'light':'dark'; 
+  document.documentElement.setAttribute('data-theme',novo); 
+  localStorage.setItem(CONFIG.STORAGE_THEME_KEY,novo); 
+  showToast(`🌓 Tema ${novo==='dark'?'escuro':'claro'}`, 'info',2000); 
+  atualizarBotaoTema(); 
+}
+
+function atualizarBotaoTema(){ 
+  const btn=document.getElementById('themeToggle'); 
+  const tema=document.documentElement.getAttribute('data-theme')||'dark'; 
+  btn.textContent=tema==='dark'?'☀️ Claro':'🌙 Escuro'; 
+  btn.onclick=alternarTema; 
+}
+
+function configurarAtalhosTeclado(){ 
+  document.addEventListener('keydown',(e)=>{ 
+    if(['INPUT','TEXTAREA'].includes(e.target.tagName)) return; 
+    if(e.ctrlKey||e.metaKey){ 
+      switch(e.key.toLowerCase()){ 
+        case 'n': e.preventDefault(); document.getElementById('nomeAluno').focus(); showToast('⌨️ Foco no nome','info',1500); break; 
+        case 'f': e.preventDefault(); document.getElementById('pesquisaAluno').focus(); showToast('⌨️ Foco na pesquisa','info',1500); break; 
+        case 'e': e.preventDefault(); exportarCSV(); break; 
+        case 'b': e.preventDefault(); backupDados(); break; 
+        case 'r': e.preventDefault(); gerarRelatorioMensal(); break; 
+      } 
+    } 
+    if(e.key==='Escape'){ 
+      limparPesquisa(); 
+      fecharModalEditar(); 
+      fecharModalRelatorio();
+      fecharModalAlterarPIN();
+    } 
+  }); 
+}
+
+function configurarMascaraWhatsapp(){ 
+  const aplicar=(input)=>{ 
+    let valor=input.value.replace(/\D/g,''); 
+    if(valor.length<=10) valor=valor.replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2'); 
+    else valor=valor.replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2'); 
+    input.value=valor.slice(0,15); 
+  }; 
+  ['whatsappAluno','editWhatsapp'].forEach(id=>{ 
+    const i=document.getElementById(id); 
+    if(i){ 
+      i.addEventListener('input',()=>aplicar(i)); 
+      i.addEventListener('blur',()=>{ 
+        i.dataset.raw=i.value.replace(/\D/g,''); 
+      }); 
+    } 
+  }); 
+}
+
+window.adicionarAluno=adicionarAluno; 
+window.exportarCSV=exportarCSV; 
+window.removerAluno=removerAluno; 
+window.enviarCobrancaWhatsApp=enviarCobrancaWhatsApp; 
+window.editarAluno=editarAluno; 
+window.fecharModalEditar=fecharModalEditar; 
+window.salvarEdicao=salvarEdicao; 
+window.togglePagamento=togglePagamento; 
+window.atualizarDataPagamento=atualizarDataPagamento; 
+window.pesquisarAluno=pesquisarAluno; 
+window.limparPesquisa=limparPesquisa; 
+window.aplicarFiltroStatus=aplicarFiltroStatus; 
+window.atualizarValorMensalidade=atualizarValorMensalidade; 
+window.backupDados=backupDados; 
+window.restaurarDados=restaurarDados; 
+window.verificarPIN=verificarPIN; 
+window.redefinirPIN=redefinirPIN; 
+window.alternarTema=alternarTema; 
+window.gerarRelatorioMensal=gerarRelatorioMensal; 
+window.fecharModalRelatorio=fecharModalRelatorio; 
+window.exportarPDF=exportarPDF; 
+window.marcarTodosPagos=marcarTodosPagos; 
+window.cobrarPendentes=cobrarPendentes; 
+window.atualizarRelatorioPorPeriodo=atualizarRelatorioPorPeriodo; 
+window.fecharModalAlterarPIN=fecharModalAlterarPIN;
+window.confirmarPINAtual=confirmarPINAtual;
+window.avançarParaConfirmacao=avançarParaConfirmacao;
+window.salvarNovoPIN=salvarNovoPIN;
+window.voltarStep=voltarStep;
+atualizarBotaoTema();
 </script>
 </body>
 </html>
