@@ -1348,21 +1348,69 @@ function atualizarDataPagamento(idx, mes, valor){ salvarDataPagamento(alunos[idx
 function enviarCobrancaWhatsApp(idx){ 
   const aluno = alunos[idx]; 
   
-  // Validação do WhatsApp
+  // 1. Validação do WhatsApp
   if(!aluno.whatsapp){ 
     showToast(`⚠️ ${aluno.nome} sem WhatsApp!`, 'warning'); 
     return; 
   } 
   
-  // Formatação do número para padrão internacional
+  // 2. Limpeza e formatação internacional (apenas números)
   let num = aluno.whatsapp.replace(/\D/g,''); 
   if(!num.startsWith('55')) num = '55' + num; 
   
-  // Validação: números brasileiros válidos têm 12-13 dígitos com código 55
+  // 3. Validação de tamanho (Brasil com 55 tem 12 ou 13 dígitos)
   if(num.length < 12 || num.length > 13){ 
-    showToast('❌ Número inválido! Use: DDD + 9 dígitos (ex: 11912345678)', 'error'); 
+    showToast('❌ Número inválido! Cadastre com DDD + 9 dígitos', 'error'); 
     return; 
   } 
+  
+  const mesAtual = new Date().getMonth(); 
+  const anoAtual = new Date().getFullYear(); 
+  const mesNome = CONFIG.MESES[mesAtual]; 
+  const pago = aluno.meses[mesAtual]?.pago; 
+  const dataPag = obterDataPagamentoFormatada(aluno, mesAtual); 
+  const dataInicioFormatada = aluno.dataInicio ? aluno.dataInicio.split('-').reverse().join('/') : "não informada"; 
+  
+  // CORREÇÃO PRINCIPAL AQUI: statusTexto em vez de status
+  const statusTexto = pago ? "✅ PAGO" : "❌ *Pendente*"; 
+  const aviso = !pago 
+    ? "🔔 Identificamos em nosso sistema que sua mensalidade ainda não foi quitada. Pedimos, por gentileza, que realize o pagamento até a data de vencimento." 
+    : "✅ Agradecemos o pagamento!"; 
+  
+  // Montagem da mensagem (usando template literals corretos)
+  let msg = `🏛️ *INSTITUTO IMPACTO SOCIAL – Dojô de Karatê*
+
+Olá, *${aluno.nome}*! Tudo bem?
+
+📆 *Referente à mensalidade de ${mesNome}/${anoAtual}*
+💰 *Valor:* R$ ${valorMensalidade.toFixed(2).replace('.',',')}
+📊 *Status:* ${statusTexto}`; 
+  
+  if(!pago && dataPag) msg += `\n📅 *Vencimento:* ${dataPag}`; 
+  
+  msg += `
+
+ ${aviso}
+
+💳 *Formas de pagamento:*
+• PIX: 91991629403
+• Dinheiro (diretamente no dojô)
+• Transferência bancária (consulte-nos)
+
+✨ Após o pagamento, envie o comprovante para que possamos atualizar seu cadastro.
+
+📅 *Início das atividades:* ${dataInicioFormatada}
+🥋 *Dojô Impacto Social – Disciplina e Excelência*`; 
+  
+  // Codificação correta para URL
+  const msgCodificada = encodeURIComponent(msg);
+  
+  // Abre o WhatsApp (certificando que não há espaços no número)
+  const numeroLimpo = num.replace(/\s/g, '');
+  window.open(`https://wa.me/${numeroLimpo}?text=${msgCodificada}`, '_blank'); 
+  
+  showToast(`💬 Abrindo WhatsApp para ${aluno.nome}...`, 'info', 2000); 
+}
   
   const mesAtual = new Date().getMonth(); 
   const anoAtual = new Date().getFullYear(); 
