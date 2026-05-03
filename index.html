@@ -1345,7 +1345,8 @@ function togglePagamento(idx, mes){ const aluno=alunos[idx]; aluno.meses[mes].pa
 function atualizarDataPagamento(idx, mes, valor){ salvarDataPagamento(alunos[idx], mes, valor); salvar(); renderizarTabela(); }
 
 // ✅ FUNÇÃO CORRIGIDA - WhatsApp com encodeURIComponent
-function enviarCobrancaWhatsApp(idx){ 
+
+  function enviarCobrancaWhatsApp(idx){ 
   const aluno = alunos[idx]; 
   
   if(!aluno.whatsapp){ 
@@ -1374,45 +1375,26 @@ function enviarCobrancaWhatsApp(idx){
   
   msg += `\n\n${aviso}\n\n💳 *Formas de pagamento:*\n• PIX: 91991629403\n• Dinheiro (diretamente no dojô)\n• Transferência bancária (consulte-nos)\n\n✨ Após o pagamento, envie o comprovante para que possamos atualizar seu cadastro.\n\n📅 *Início das atividades:* ${dataInicioFormatada}\n🥋 *Dojô Impacto Social – Disciplina e Excelência*`; 
 
-  // Tenta abrir direto (se estiver no navegador do PC ou Chrome)
-  try {
-    const msgCodificada = encodeURIComponent(msg);
-    const numeroLimpo = num.replace(/\s/g, '');
-    const linkWhatsApp = `https://wa.me/${numeroLimpo}?text=${msgCodificada}`;
-    
-    window.open(linkWhatsApp, '_blank');
-    showToast(`💬 Abrindo WhatsApp para ${aluno.nome}...`, 'info', 2000);
-  } catch(e) {
-    // Se der erro (porque está dentro do seu App no celular), ele COPIA a mensagem
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(msg).then(() => {
-        showToast(`📋 Mensagem COPIADA! Abra o WhatsApp, cole e envie.`, 'success', 5000);
-      }).catch(() => {
-        copiarMsgAlternativo(msg);
-      });
-    } else {
-      copiarMsgAlternativo(msg);
+  // FORÇA APENAS A CÓPIA DENTRO DO APLICATIVO
+  function copiarTexto(texto) {
+    const areaTexto = document.createElement("textarea");
+    areaTexto.value = texto;
+    areaTexto.style.position = "fixed";
+    areaTexto.style.left = "-9999px";
+    document.body.appendChild(areaTexto);
+    areaTexto.select();
+    try {
+      document.execCommand('copy');
+      showToast(`📋 COPIADO! Abra o WhatsApp do aluno e cole.`, 'success', 5000);
+    } catch(e) {
+      showToast(`❌ Falha ao copiar.`, 'error');
     }
+    document.body.removeChild(areaTexto);
   }
-}
 
-// Função auxiliar para copiar caso o navegador seja muito antigo
-function copiarMsgAlternativo(texto) {
-  const areaTexto = document.createElement("textarea");
-  areaTexto.value = texto;
-  areaTexto.style.position = "fixed";
-  areaTexto.style.left = "-9999px";
-  document.body.appendChild(areaTexto);
-  areaTexto.select();
-  try {
-    document.execCommand('copy');
-    showToast(`📋 Mensagem COPIADA! Abra o WhatsApp, cole e envie.`, 'success', 5000);
-  } catch(e) {
-    showToast(`❌ Erro ao copiar.`, 'error');
-  }
-  document.body.removeChild(areaTexto);
+  copiarTexto(msg);
+  return false; // Impede qualquer outra ação do celular
 }
-  
   
 
 function marcarTodosPagos(mes){ if(!confirm(`✅ Marcar TODOS os ${alunos.length} alunos como PAGOS em ${CONFIG.MESES[mes]}?`)) return; let cont=0; alunos.forEach(aluno=>{ if(!aluno.meses[mes].pago){ aluno.meses[mes].pago=true; cont++; } }); salvar(); renderizarTabela(); showToast(`🎉 ${cont} aluno(s) pagos em ${CONFIG.MESES_CURTOS[mes]}!`, 'success'); }
