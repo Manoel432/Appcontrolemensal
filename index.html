@@ -1412,51 +1412,7 @@ Olá, *${aluno.nome}*! Tudo bem?
   showToast(`💬 Abrindo WhatsApp para ${aluno.nome}...`, 'info', 2000); 
 }
   
-  const mesAtual = new Date().getMonth(); 
-  const anoAtual = new Date().getFullYear(); 
-  const mesNome = CONFIG.MESES[mesAtual]; 
-  const pago = aluno.meses[mesAtual]?.pago; 
-  const dataPag = obterDataPagamentoFormatada(aluno, mesAtual); 
-  const dataInicioFormatada = aluno.dataInicio ? aluno.dataInicio.split('-').reverse().join('/') : "não informada"; 
-  const statusTexto = pago ? "✅ PAGO" : "❌ *Pendente*"; 
-  const aviso = !pago 
-    ? "🔔 Identificamos em nosso sistema que sua mensalidade ainda não foi quitada. Pedimos, por gentileza, que realize o pagamento até a data de vencimento." 
-    : "✅ Agradecemos o pagamento!"; 
   
-  // Construção da mensagem com \n para quebras de linha (mais legível)
-  let msg = `🏛️ *INSTITUTO IMPACTO SOCIAL – Dojô de Karatê*
-
-Olá, *${aluno.nome}*! Tudo bem?
-
-📆 *Referente à mensalidade de ${mesNome}/${anoAtual}*
-💰 *Valor:* R$ ${valorMensalidade.toFixed(2).replace('.',',')}
-📊 *Status:* ${statusTexto}
-`; 
-  
-  if(!pago && dataPag) msg += `📅 *Vencimento:* ${dataPag}
-`; 
-  
-  msg += `
-${aviso}
-
-💳 *Formas de pagamento:*
-• PIX: 91991629403
-• Dinheiro (diretamente no dojô)
-• Transferência bancária (consulte-nos)
-
-✨ Após o pagamento, envie o comprovante para que possamos atualizar seu cadastro.
-
-📅 *Início das atividades:* ${dataInicioFormatada}
-🥋 *Dojô Impacto Social – Disciplina e Excelência*`; 
-  
-  // 🔑 CORREÇÃO PRINCIPAL: Codificar a mensagem para URL
-  const msgCodificada = encodeURIComponent(msg);
-  
-  // Abrir WhatsApp com mensagem codificada
-  window.open(`https://wa.me/${num}?text=${msgCodificada}`, '_blank'); 
-  
-  showToast(`💬 Abrindo WhatsApp para ${aluno.nome}...`, 'info', 2000); 
-}
 
 function marcarTodosPagos(mes){ if(!confirm(`✅ Marcar TODOS os ${alunos.length} alunos como PAGOS em ${CONFIG.MESES[mes]}?`)) return; let cont=0; alunos.forEach(aluno=>{ if(!aluno.meses[mes].pago){ aluno.meses[mes].pago=true; cont++; } }); salvar(); renderizarTabela(); showToast(`🎉 ${cont} aluno(s) pagos em ${CONFIG.MESES_CURTOS[mes]}!`, 'success'); }
 function cobrarPendentes(mes){ const pendentes=alunos.filter(a=>!a.meses[mes]?.pago && a.whatsapp); if(pendentes.length===0){ showToast('😊 Nenhum pendente com WhatsApp!', 'info'); return; } if(!confirm(`💬 Enviar cobrança para ${pendentes.length} aluno(s)?`)) return; pendentes.forEach((aluno,i)=>{ setTimeout(()=>{ const idx=alunos.findIndex(a=>a.nome===aluno.nome); if(idx>=0) enviarCobrancaWhatsApp(idx); }, i*1000); }); showToast(`📤 Enviando ${pendentes.length} cobranças...`, 'info', 3000); }
