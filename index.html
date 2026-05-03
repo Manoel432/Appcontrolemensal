@@ -1383,30 +1383,14 @@ function enviarCobrancaWhatsApp(idx){
   const numeroLimpo = num.replace(/\s/g, '');
   const linkWhatsApp = `https://wa.me/${numeroLimpo}?text=${msgCodificada}`;
   
-  // VERIFICAÇÃO CHAVE: Está rodando dentro do App (Kodular) ou no Navegador?
-  // O Kodular injeta um objeto chamado 'AppInventor' no JavaScript
+  // ENVIANDO O LINK PARA O KODULAR ATRAVÉS DO WebViewString
   if (typeof window.AppInventor !== 'undefined') {
-    
-    // 1. Opção Principal: Tenta usar o WebView para abrir no navegador externo do celular
-    try {
-      window.open(linkWhatsApp, '_system'); 
-      showToast(`💬 Abrindo WhatsApp para ${aluno.nome}...`, 'info', 2000);
-      return;
-    } catch (e) {
-      // Se o _system falhar, caímos para a alternativa
-    }
-
-    // 2. Opção Alternativa (Fallback): Usa um link de redirecionamento temporário
-    // Isso força o WebView a sair do aplicativo e ir para o navegador, que então abre o WhatsApp
-    const linkRedirecionamento = `https://api.whatsapp.com/send?phone=${numeroLimpo}&text=${msgCodificada}`;
-    window.location.href = linkRedirecionamento;
-    
+    window.AppInventor.setWebViewString(linkWhatsApp);
+    showToast(`💬 Abrindo WhatsApp...`, 'info', 2000);
   } else {
-    // Se estiver rodando num navegador normal (Chrome/Safari), abre normalmente
+    // Se for aberto pelo link do GitHub (navegador normal), abre direto
     window.open(linkWhatsApp, '_blank'); 
   }
-  
-  showToast(`💬 Abrindo WhatsApp para ${aluno.nome}...`, 'info', 2000); 
 }
   
   
