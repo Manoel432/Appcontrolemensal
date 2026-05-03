@@ -1345,8 +1345,7 @@ function togglePagamento(idx, mes){ const aluno=alunos[idx]; aluno.meses[mes].pa
 function atualizarDataPagamento(idx, mes, valor){ salvarDataPagamento(alunos[idx], mes, valor); salvar(); renderizarTabela(); }
 
 // ✅ FUNÇÃO CORRIGIDA - WhatsApp com encodeURIComponent
-
-  function enviarCobrancaWhatsApp(idx){ 
+ function enviarCobrancaWhatsApp(idx){ 
   const aluno = alunos[idx]; 
   
   if(!aluno.whatsapp){ 
