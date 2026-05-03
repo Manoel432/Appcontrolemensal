@@ -1345,6 +1345,7 @@ function togglePagamento(idx, mes){ const aluno=alunos[idx]; aluno.meses[mes].pa
 function atualizarDataPagamento(idx, mes, valor){ salvarDataPagamento(alunos[idx], mes, valor); salvar(); renderizarTabela(); }
 
 // ✅ FUNÇÃO CORRIGIDA - WhatsApp com encodeURIComponent
+// ✅ FUNÇÃO CORRIGIDA - WhatsApp com encodeURIComponent
 function enviarCobrancaWhatsApp(idx){ 
   const aluno = alunos[idx]; 
   
@@ -1371,36 +1372,17 @@ function enviarCobrancaWhatsApp(idx){
   const dataPag = obterDataPagamentoFormatada(aluno, mesAtual); 
   const dataInicioFormatada = aluno.dataInicio ? aluno.dataInicio.split('-').reverse().join('/') : "não informada"; 
   
-  // CORREÇÃO PRINCIPAL AQUI: statusTexto em vez de status
   const statusTexto = pago ? "✅ PAGO" : "❌ *Pendente*"; 
   const aviso = !pago 
     ? "🔔 Identificamos em nosso sistema que sua mensalidade ainda não foi quitada. Pedimos, por gentileza, que realize o pagamento até a data de vencimento." 
     : "✅ Agradecemos o pagamento!"; 
   
-  // Montagem da mensagem (usando template literals corretos)
-  let msg = `🏛️ *INSTITUTO IMPACTO SOCIAL – Dojô de Karatê*
-
-Olá, *${aluno.nome}*! Tudo bem?
-
-📆 *Referente à mensalidade de ${mesNome}/${anoAtual}*
-💰 *Valor:* R$ ${valorMensalidade.toFixed(2).replace('.',',')}
-📊 *Status:* ${statusTexto}`; 
+  // CORREÇÃO PRINCIPAL: Montagem da mensagem SEM quebras de linha soltas no início/fim
+  let msg = `🏛️ *INSTITUTO IMPACTO SOCIAL – Dojô de Karatê*\n\nOlá, *${aluno.nome}*! Tudo bem?\n\n📆 *Referente à mensalidade de ${mesNome}/${anoAtual}*\n💰 *Valor:* R$ ${valorMensalidade.toFixed(2).replace('.',',')}\n📊 *Status:* ${statusTexto}`; 
   
   if(!pago && dataPag) msg += `\n📅 *Vencimento:* ${dataPag}`; 
   
-  msg += `
-
- ${aviso}
-
-💳 *Formas de pagamento:*
-• PIX: 91991629403
-• Dinheiro (diretamente no dojô)
-• Transferência bancária (consulte-nos)
-
-✨ Após o pagamento, envie o comprovante para que possamos atualizar seu cadastro.
-
-📅 *Início das atividades:* ${dataInicioFormatada}
-🥋 *Dojô Impacto Social – Disciplina e Excelência*`; 
+  msg += `\n\n${aviso}\n\n💳 *Formas de pagamento:*\n• PIX: 91991629403\n• Dinheiro (diretamente no dojô)\n• Transferência bancária (consulte-nos)\n\n✨ Após o pagamento, envie o comprovante para que possamos atualizar seu cadastro.\n\n📅 *Início das atividades:* ${dataInicioFormatada}\n🥋 *Dojô Impacto Social – Disciplina e Excelência*`; 
   
   // Codificação correta para URL
   const msgCodificada = encodeURIComponent(msg);
