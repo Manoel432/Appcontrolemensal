@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Dojo Impacto Social | Controle de Mensalidades</title>
+  <title>Dojo Impacto Social | Controle Completo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -177,6 +178,84 @@
       font-family: var(--font-family);
     }
 
+    /* Tab Navigation */
+    .tab-navigation {
+      display: flex;
+      background: rgba(0, 0, 0, 0.35);
+      border-bottom: 2px solid var(--border-glow);
+      padding: 0 20px;
+      gap: 4px;
+      overflow-x: auto;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 14px 24px;
+      background: transparent;
+      border: none;
+      color: var(--text-gray);
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-family);
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-offwhite);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-gold);
+      border-bottom-color: var(--accent-gold);
+    }
+
+    .tab-btn-config {
+      margin-left: auto;
+      padding: 8px 16px;
+      background: rgba(255, 215, 0, 0.12);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: var(--border-radius-sm);
+      color: var(--accent-gold);
+      font-weight: 700;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-family);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn-config:hover {
+      background: rgba(255, 215, 0, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeInUp 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Finances Panel */
     .finances-panel {
       background: rgba(0, 0, 0, 0.35);
       margin: 1.2rem 1.5rem;
@@ -273,8 +352,8 @@
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(46, 204, 113, 0.45);
     }
-    .btn-small:active { transform: translateY(0); }
 
+    /* Mensalidades Panel */
     .card-panel {
       background: rgba(0, 0, 0, 0.35);
       margin: 0 1.5rem 1.2rem 1.5rem;
@@ -309,7 +388,7 @@
       color: var(--accent-gold);
       margin-bottom: 5px;
     }
-    .input-group input, .input-group select {
+    .input-group input, .input-group select, .input-group textarea {
       width: 100%;
       background: var(--bg-input);
       border: 1.5px solid rgba(255, 215, 0, 0.45);
@@ -320,10 +399,19 @@
       font-size: 0.88rem;
       outline: none;
       transition: var(--transition);
+      font-family: var(--font-family);
     }
-    .input-group input:focus, .input-group select:focus {
+    .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
       border-color: var(--accent-gold);
       box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.28);
+    }
+    .input-group select option {
+      background: #1a2a34;
+    }
+    .input-group textarea {
+      resize: vertical;
+      min-height: 60px;
+      border-radius: var(--border-radius-sm);
     }
 
     .search-group input {
@@ -374,6 +462,12 @@
       background: linear-gradient(135deg, #3a5068, #2c3e50);
       box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--success-green), var(--success-green-dark));
+      color: white;
+    }
+    .btn-success:hover { box-shadow: 0 8px 28px rgba(46, 204, 113, 0.45); }
 
     .btn-whatsapp {
       background: linear-gradient(135deg, var(--whatsapp-green), #128C7E);
@@ -445,6 +539,7 @@
       transform: translateY(-1px);
     }
 
+    /* Tabela Mensalidades */
     .table-wrapper {
       margin: 0.8rem 1.3rem 1.8rem 1.3rem;
       overflow-x: auto;
@@ -667,83 +762,286 @@
       flex-wrap: wrap;
     }
 
-    footer {
-      text-align: center;
-      padding: 1rem 1.5rem;
-      font-size: 0.72rem;
-      color: var(--text-gray);
-      border-top: 1px solid rgba(255, 215, 0, 0.2);
+    /* Stats Grid Evolução */
+    .stats-grid-evo {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      padding: 20px 30px;
       background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--border-glow);
+    }
+
+    .stat-card {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 16px 20px;
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--border-glow);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-card:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-2px);
+    }
+
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.purple { background: rgba(155, 89, 182, 0.2); color: #9B59B6; }
+    .stat-icon.orange { background: rgba(243, 156, 18, 0.2); color: #F39C12; }
+    .stat-icon.gold { background: rgba(255, 215, 0, 0.2); color: #F1C40F; }
+    .stat-icon.red { background: rgba(231, 76, 60, 0.2); color: #E74C3C; }
+
+    .stat-info h4 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-gray);
+      font-weight: 600;
+    }
+
+    .stat-info .value {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-offwhite);
+      line-height: 1.2;
+    }
+
+    .stat-info .value.gold { color: var(--accent-gold); }
+    .stat-info .value.green { color: var(--success-green); }
+    .stat-info .value.red { color: var(--danger-red); }
+    .stat-info .value.purple { color: #9B59B6; }
+    .stat-info .value.orange { color: #F39C12; }
+
+    /* Evolution Grid */
+    .evolution-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+      padding: 20px 30px;
+    }
+
+    .evolution-card {
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--border-glow);
+      padding: 0;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .evolution-card:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .evolution-card .card-header {
+      background: linear-gradient(135deg, var(--primary-red-dark), var(--primary-red));
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .evolution-card .card-header .aluno-nome {
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .evolution-card .card-header .graduacao-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--accent-gold);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .evolution-card .card-body {
+      padding: 16px 20px;
+    }
+
+    .evolution-card .card-body .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+      font-size: 0.8rem;
+    }
+
+    .evolution-card .card-body .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .evolution-card .card-body .info-row .label {
+      color: var(--text-gray);
+    }
+
+    .evolution-card .card-body .info-row .value {
+      font-weight: 600;
+      color: var(--text-offwhite);
+    }
+
+    .evolution-card .card-body .info-row .value.destaque {
+      color: var(--accent-gold);
+    }
+
+    .evolution-card .card-body .observacao {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: var(--text-gray);
+      font-style: italic;
+    }
+
+    .evolution-card .alerta-graduacao {
+      margin: 10px 20px 0 20px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: pulseAlerta 1.5s ease-in-out infinite;
+    }
+
+    .evolution-card .alerta-graduacao.vencido {
+      background: rgba(231, 76, 60, 0.2);
+      border-left: 4px solid #E74C3C;
+      color: #ff6b6b;
+    }
+
+    .evolution-card .alerta-graduacao.proximo {
+      background: rgba(243, 156, 18, 0.2);
+      border-left: 4px solid #F39C12;
+      color: #f1c40f;
+    }
+
+    .evolution-card .alerta-graduacao.atencao {
+      background: rgba(243, 156, 18, 0.1);
+      border-left: 4px solid #F39C12;
+      color: #f39c12;
+    }
+
+    .evolution-card .alerta-graduacao.sem-alerta {
+      background: rgba(46, 204, 113, 0.1);
+      border-left: 4px solid #2ECC71;
+      color: #2ecc71;
+    }
+
+    .evolution-card .alerta-graduacao .icone {
+      font-size: 1.1rem;
+    }
+    .evolution-card .alerta-graduacao .texto {
+      flex: 1;
+    }
+    .evolution-card .alerta-graduacao .tempo {
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+
+    @keyframes pulseAlerta {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
+    .evolution-card .card-footer {
+      padding: 12px 20px;
+      background: rgba(0, 0, 0, 0.25);
+      border-top: 1px solid var(--border-glow);
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .evolution-card .card-footer .evo-btn {
+      flex: 1;
+      min-width: 55px;
+      padding: 5px 8px;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-family);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-align: center;
+    }
+
+    .evolution-card .card-footer .evo-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .evolution-card .card-footer .evo-btn.promover {
+      background: var(--success-green);
+      color: white;
+    }
+
+    .evolution-card .card-footer .evo-btn.editar {
+      background: #3498DB;
+      color: white;
+    }
+
+    .evolution-card .card-footer .evo-btn.ver-todas {
+      background: var(--accent-gold);
+      color: #1A1A2E;
+    }
+
+    .evolution-card .card-footer .evo-btn.excluir {
+      background: var(--danger-red);
+      color: white;
+    }
+
+    .evolution-card .card-footer .evo-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .evo-header {
+      padding: 20px 30px;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--border-glow);
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 15px;
     }
-    .shortcuts-hint {
-      background: rgba(255, 215, 0, 0.12);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
+
+    .evo-header h3 {
       color: var(--accent-gold);
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      cursor: help;
+      font-size: 1.1rem;
     }
 
-    #toastContainer {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 360px;
-      pointer-events: none;
-    }
-    .toast {
-      background: linear-gradient(135deg, #2c3e50, #1a252f);
-      color: white;
-      padding: 14px 18px;
-      border-radius: 14px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      box-shadow: var(--shadow-md);
-      animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-left: 4px solid var(--accent-gold);
-      pointer-events: auto;
-      max-width: 100%;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 215, 0, 0.25);
-    }
-    .toast.success {
-      background: linear-gradient(135deg, var(--success-green), var(--success-green-dark));
-      border-left-color: #27ae60;
-    }
-    .toast.error {
-      background: linear-gradient(135deg, var(--danger-red), #c0392b);
-      border-left-color: #c0392b;
-    }
-    .toast.warning {
-      background: linear-gradient(135deg, var(--warning-orange), #d35400);
-      border-left-color: #d35400;
-    }
-    .toast.info {
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      border-left-color: #2980b9;
-    }
-    @keyframes slideIn {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes fadeOut {
-      from { opacity: 1; transform: translateX(0); }
-      to { opacity: 0; transform: translateX(20px); }
+    .evo-header p {
+      color: var(--text-gray);
+      font-size: 0.8rem;
     }
 
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -768,6 +1066,8 @@
       border: 1px solid var(--border-glow);
       box-shadow: var(--shadow-lg);
       animation: modalSlide 0.3s ease;
+      max-height: 85vh;
+      overflow-y: auto;
     }
     @keyframes modalSlide {
       from { transform: translateY(-30px); opacity: 0; }
@@ -819,6 +1119,84 @@
       border-top: 1px solid rgba(255, 215, 0, 0.2);
     }
 
+    .graduacao-config-modal {
+      padding: 5px 0;
+    }
+
+    .graduacao-config-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .graduacao-item-foto {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--border-glow);
+      padding: 16px 20px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .graduacao-item-foto:hover {
+      border-color: var(--accent-gold);
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .graduacao-item-foto .fa-award {
+      font-size: 1.8rem;
+      color: var(--accent-gold);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .graduacao-item-foto .nome-faixa {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-offwhite);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .graduacao-item-foto .label-tempo {
+      font-size: 0.65rem;
+      color: var(--text-gray);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .graduacao-item-foto .controle-foto {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .graduacao-item-foto .controle-foto input {
+      width: 70px;
+      padding: 6px 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-glow);
+      border-radius: 6px;
+      color: var(--text-offwhite);
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .graduacao-item-foto .controle-foto input:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.15);
+    }
+
+    .graduacao-item-foto .controle-foto .unidade {
+      font-size: 0.7rem;
+      color: var(--text-gray);
+    }
+
+    /* Login */
     .login-modal .modal-content {
       max-width: 420px;
       text-align: center;
@@ -878,7 +1256,85 @@
       font-weight: 600;
     }
 
-    /* Seletor de mês para relatórios */
+    /* Toast */
+    #toastContainer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 360px;
+      pointer-events: none;
+    }
+    .toast {
+      background: linear-gradient(135deg, #2c3e50, #1a252f);
+      color: white;
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      box-shadow: var(--shadow-md);
+      animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 4px solid var(--accent-gold);
+      pointer-events: auto;
+      max-width: 100%;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+    }
+    .toast.success {
+      background: linear-gradient(135deg, var(--success-green), var(--success-green-dark));
+      border-left-color: #27ae60;
+    }
+    .toast.error {
+      background: linear-gradient(135deg, var(--danger-red), #c0392b);
+      border-left-color: #c0392b;
+    }
+    .toast.warning {
+      background: linear-gradient(135deg, var(--warning-orange), #d35400);
+      border-left-color: #d35400;
+    }
+    .toast.info {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      border-left-color: #2980b9;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(20px); }
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem 1.5rem;
+      font-size: 0.72rem;
+      color: var(--text-gray);
+      border-top: 1px solid rgba(255, 215, 0, 0.2);
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .shortcuts-hint {
+      background: rgba(255, 215, 0, 0.12);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      color: var(--accent-gold);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      cursor: help;
+    }
+
     .month-selector-group {
       background: rgba(0,0,0,0.25);
       border-radius: 40px;
@@ -904,6 +1360,7 @@
       .hero h1 { font-size: 1.4rem; }
       .finances-panel { flex-direction: column; align-items: stretch; }
       .profit-card { justify-content: center; }
+      .stats-grid-evo { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 768px) {
@@ -921,6 +1378,11 @@
       .progress-bar { max-width: 100%; }
       .bulk-actions { width: 100%; justify-content: center; }
       footer { flex-direction: column; text-align: center; }
+      .tab-navigation { padding: 0 10px; flex-wrap: wrap; }
+      .tab-btn { padding: 10px 14px; font-size: 0.7rem; }
+      .tab-btn-config { margin-left: 0; }
+      .stats-grid-evo { grid-template-columns: 1fr 1fr; }
+      .evolution-grid { grid-template-columns: 1fr; padding: 15px; }
     }
 
     @media (max-width: 480px) {
@@ -934,6 +1396,12 @@
       .actions button { padding: 3px 8px; font-size: 0.6rem; min-width: 55px; }
       .pin-input input { width: 48px; height: 52px; font-size: 1.3rem; }
       .payment-date input { width: 60px; }
+      .stats-grid-evo { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat-card { padding: 10px; }
+      .stat-icon { width: 36px; height: 36px; font-size: 1rem; }
+      .stat-info .value { font-size: 1rem; }
+      .evolution-card .alerta-graduacao { font-size: 0.65rem; padding: 8px 10px; }
+      .evolution-card .card-footer .evo-btn { font-size: 0.5rem; padding: 3px 4px; min-width: 38px; }
     }
 
     tbody tr { animation: rowFade 0.3s ease forwards; opacity: 0; }
@@ -949,17 +1417,30 @@
       .watermark, .hero .btn-theme, .finances-panel .btn-small, 
       .card-panel .btn-group, .filter-buttons, .bulk-actions,
       .actions, footer .shortcuts-hint,
-      #toastContainer, .modal { display: none !important; }
+      #toastContainer, .modal, .tab-navigation { display: none !important; }
       .dashboard { margin: 0; border-radius: 0; box-shadow: none; }
       .hero { background: #c62828; print-color-adjust: exact; }
       .profit-card { print-color-adjust: exact; }
       table { font-size: 10pt; }
       td, th { padding: 4px; }
     }
+
+    .btn-copy {
+      background: linear-gradient(135deg, #8e44ad, #6c3483);
+      color: white;
+    }
+    .btn-copy:hover { box-shadow: 0 8px 28px rgba(142, 68, 173, 0.45); }
+    
+    .btn-paste {
+      background: linear-gradient(135deg, #2980b9, #1a5276);
+      color: white;
+    }
+    .btn-paste:hover { box-shadow: 0 8px 28px rgba(41, 128, 185, 0.45); }
   </style>
 </head>
 <body>
 
+<!-- Watermark -->
 <div class="watermark">
   <div class="watermark-logo">
     <div>DOJO</div>
@@ -967,9 +1448,12 @@
   </div>
 </div>
 
+<!-- Toast Container -->
 <div id="toastContainer"></div>
 
-<!-- Modal de Edição de Aluno -->
+<!-- ===== MODAIS ===== -->
+
+<!-- Modal Editar Aluno (Mensalidades) -->
 <div id="modalEditar" class="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -998,7 +1482,7 @@
   </div>
 </div>
 
-<!-- Modal de Relatório -->
+<!-- Modal Relatório -->
 <div id="modalRelatorio" class="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -1023,10 +1507,134 @@
   </div>
 </div>
 
-<!-- Modal de Login/PIN -->
+<!-- Modal Editar Evolução -->
+<div id="modalEditarEvolucao" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>📊 Editar Evolução</h3>
+      <button class="modal-close" onclick="fecharModalEditarEvolucao()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editEvolucaoIndex">
+      <div class="input-group">
+        <label>👤 Aluno</label>
+        <select id="editEvolucaoAluno"></select>
+      </div>
+      <div class="input-group">
+        <label>🎯 Graduação Atual</label>
+        <select id="editEvolucaoGraduacao"></select>
+      </div>
+      <div class="input-group">
+        <label>📅 Data da Graduação</label>
+        <input type="date" id="editEvolucaoData">
+      </div>
+      <div class="input-group">
+        <label>📝 Observações</label>
+        <textarea id="editEvolucaoObs" placeholder="Detalhes sobre a evolução do aluno..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModalEditarEvolucao()">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarEdicaoEvolucao()">💾 Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Adicionar Evolução -->
+<div id="modalAdicionarEvolucao" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>➕ Registrar Evolução</h3>
+      <button class="modal-close" onclick="fecharModalAdicionarEvolucao()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="input-group">
+        <label>👤 Aluno *</label>
+        <select id="novaEvolucaoAluno"></select>
+      </div>
+      <div class="input-group">
+        <label>🎯 Nova Graduação *</label>
+        <select id="novaEvolucaoGraduacao"></select>
+      </div>
+      <div class="input-group">
+        <label>📅 Data da Graduação</label>
+        <input type="date" id="novaEvolucaoData">
+      </div>
+      <div class="input-group">
+        <label>📝 Observações</label>
+        <textarea id="novaEvolucaoObs" placeholder="Detalhes sobre a evolução do aluno..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModalAdicionarEvolucao()">Cancelar</button>
+      <button class="btn btn-success" onclick="salvarNovaEvolucao()">✅ Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Config Graduações -->
+<div id="modalConfigGraduacoes" class="modal">
+  <div class="modal-content" style="max-width:600px;">
+    <div class="modal-header">
+      <h3>⚙️ Configurações de Graduação</h3>
+      <button class="modal-close" onclick="fecharModalConfigGraduacoes()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-gray);font-size:0.8rem;margin-bottom:15px;text-align:center;">
+        Defina o tempo mínimo em meses para cada graduação. Os alertas de carência serão baseados nestes valores.
+      </p>
+      <div class="graduacao-config-modal">
+        <div class="graduacao-config-list" id="graduacaoConfigListModal"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModalConfigGraduacoes()">Cancelar</button>
+      <button class="btn btn-secondary" onclick="restaurarConfigGraduacoes()">🔄 Restaurar</button>
+      <button class="btn btn-success" onclick="salvarConfigGraduacoesModal()">💾 Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Adicionar Aluno (simplificado) -->
+<div id="modalAdicionarAluno" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>➕ Adicionar Aluno</h3>
+      <button class="modal-close" onclick="fecharModalAdicionarAluno()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="input-group">
+        <label>🏷️ Nome Completo *</label>
+        <input type="text" id="nomeAluno" placeholder="Nome do aluno" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <label>👥 Turma</label>
+        <select id="turmaAluno">
+          <option value="infantil">👶 Infantil</option>
+          <option value="juvenil" selected>🧑 Juvenil</option>
+          <option value="adulto">💪 Adulto</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>📱 WhatsApp (com DDD)</label>
+        <input type="tel" id="whatsappAluno" placeholder="(11) 91234-5678" maxlength="15" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <label>📅 Data de Início</label>
+        <input type="date" id="dataInicio">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModalAdicionarAluno()">Cancelar</button>
+      <button class="btn btn-primary" onclick="adicionarAluno()">➕ Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Login -->
 <div id="modalLogin" class="modal login-modal">
   <div class="modal-content">
-    <img src="logo.png" style="width:120px; margin-bottom:15px; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.5);" onerror="this.style.display='none'">
+    <span class="logo">🥋</span>
     <h3>Dojo Impacto Social</h3>
     <p>Digite seu PIN de acesso para continuar</p>
     <div class="login-error" id="loginError"></div>
@@ -1044,7 +1652,7 @@
   </div>
 </div>
 
-<!-- Modal de Alteração de PIN -->
+<!-- Modal Alterar PIN -->
 <div id="modalAlterarPIN" class="modal">
   <div class="modal-content" style="max-width:450px;">
     <div class="modal-header">
@@ -1052,7 +1660,6 @@
       <button class="modal-close" onclick="fecharModalAlterarPIN()">&times;</button>
     </div>
     <div class="modal-body">
-      <!-- Passo 1: Confirmar PIN atual -->
       <div id="stepAtual">
         <p style="margin-bottom:15px;color:var(--text-gray);font-size:0.85rem;">
           Para sua segurança, confirme seu PIN atual antes de alterar.
@@ -1069,7 +1676,6 @@
         </button>
       </div>
       
-      <!-- Passo 2: Definir novo PIN -->
       <div id="stepNovoPIN" style="display:none;">
         <p style="margin-bottom:15px;color:var(--text-gray);font-size:0.85rem;">
           Digite seu <strong>novo PIN</strong> (4 dígitos numéricos):
@@ -1086,7 +1692,6 @@
         </button>
       </div>
       
-      <!-- Passo 3: Confirmar novo PIN -->
       <div id="stepConfirmarNovo" style="display:none;">
         <p style="margin-bottom:15px;color:var(--text-gray);font-size:0.85rem;">
           <strong>Confirme</strong> seu novo PIN digitando novamente:
@@ -1098,128 +1703,266 @@
           <input type="number" maxlength="1" class="pin-digit-confirmacao" data-index="3">
         </div>
         <div class="login-error" id="errorConfirmarNovo"></div>
-        <button class="btn btn-primary" onclick="salvarNovoPIN()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--success-green),var(--success-green-dark));">
+        <button class="btn btn-success" onclick="salvarNovoPIN()" style="width:100%;padding:12px;">
           💾 Salvar Novo PIN
         </button>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="fecharModalAlterarPIN()">Cancelar</button>
-      <button class="btn btn-small" onclick="voltarStep()" id="btnVoltarStep" style="display:none;">← Voltar</button>
+      <button class="btn btn-secondary" onclick="voltarStep()" id="btnVoltarStep" style="display:none;">← Voltar</button>
     </div>
   </div>
 </div>
 
-<!-- Dashboard Principal -->
+<!-- ===== DASHBOARD PRINCIPAL ===== -->
 <div class="dashboard" id="mainDashboard" style="display:none;">
   <div class="hero">
     <h1>
-      DOJO IMPACTO SOCIAL · CONTROLE DE MENSALIDADES
+      DOJO IMPACTO SOCIAL · CONTROLE COMPLETO
       <span id="themeToggle" class="btn btn-theme" title="Alternar tema">🌓 Tema</span>
     </h1>
     <div class="hero-sub">Karatê | Disciplina & Excelência</div>
   </div>
 
-  <div class="finances-panel">
-    <div class="finance-control">
-      <div class="monthly-fee-box">
-        <label>💰 MENSALIDADE</label>
-        <input type="number" id="valorMensalidade" value="100" step="10" min="0">
-        <button class="btn-small" onclick="atualizarValorMensalidade()">✓</button>
-      </div>
-      <button class="btn-small" onclick="backupDados()" title="Backup dos dados">💾 Backup</button>
-      <button class="btn-small" onclick="restaurarDados()" title="Restaurar backup">🔄 Restaurar</button>
-      <button class="btn-small" onclick="gerarRelatorioMensal()" title="Relatório do mês">📊 Relatório</button>
-      <button class="btn-small" onclick="exportarPDF()" title="Exportar PDF">📄 PDF</button>
-    </div>
-    <div class="profit-card">
-      <span>📊 LUCRO MÊS ATUAL</span>
-      <span id="lucroMensalDisplay">R$ 0,00</span>
-    </div>
+  <!-- Tab Navigation -->
+  <div class="tab-navigation">
+    <button class="tab-btn active" data-tab="mensalidades" onclick="switchTab('mensalidades')">
+      <i class="fas fa-coins"></i> Mensalidades
+    </button>
+    <button class="tab-btn" data-tab="evolucao" onclick="switchTab('evolucao')">
+      <i class="fas fa-chart-line"></i> Evolução & Graduações
+    </button>
+    <button class="tab-btn-config" onclick="abrirModalConfigGraduacoes()">
+      <i class="fas fa-cog"></i> Config. Graduações
+    </button>
   </div>
 
-  <div class="card-panel">
-    <div class="form-row">
-      <div class="input-group">
-        <label>🏷️ NOME COMPLETO *</label>
-        <input type="text" id="nomeAluno" placeholder="Nome do aluno" autocomplete="off">
+  <!-- ===== TAB: MENSALIDADES ===== -->
+  <div class="tab-content active" id="tab-mensalidades">
+    <div class="finances-panel">
+      <div class="finance-control">
+        <div class="monthly-fee-box">
+          <label>💰 MENSALIDADE</label>
+          <input type="number" id="valorMensalidade" value="100" step="10" min="0">
+          <button class="btn-small" onclick="atualizarValorMensalidade()">✓</button>
+        </div>
+        <button class="btn-small btn-copy" onclick="backupDados()" title="Copiar backup para a área de transferência">📋 Copiar Backup</button>
+        <button class="btn-small btn-paste" onclick="restaurarDados()" title="Colar backup da área de transferência">📥 Colar Backup</button>
+        <button class="btn-small" onclick="gerarRelatorioMensal()" title="Relatório do mês">📊 Relatório</button>
+        <button class="btn-small" onclick="exportarPDF()" title="Exportar PDF">📄 PDF</button>
       </div>
-      <div class="input-group">
-        <label>📅 DATA DE INÍCIO</label>
-        <input type="date" id="dataInicio">
-      </div>
-      <div class="input-group">
-        <label>📱 WHATSAPP</label>
-        <input type="tel" id="whatsappAluno" placeholder="(11) 91234-5678" maxlength="15" autocomplete="off">
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="adicionarAluno()">➕ Adicionar</button>
-        <button class="btn btn-secondary" onclick="exportarCSV()">📎 CSV</button>
+      <div class="profit-card">
+        <span>📊 LUCRO MÊS ATUAL</span>
+        <span id="lucroMensalDisplay">R$ 0,00</span>
       </div>
     </div>
 
-    <div class="form-row" style="margin-top:16px;">
-      <div class="input-group search-group" style="flex:3;">
-        <label>🔍 PESQUISAR</label>
-        <input type="text" id="pesquisaAluno" placeholder="Digite para filtrar alunos..." autocomplete="off">
+    <div class="card-panel">
+      <div class="form-row">
+        <div class="input-group">
+          <label>🏷️ NOME COMPLETO *</label>
+          <input type="text" id="nomeAlunoMensalidade" placeholder="Nome do aluno" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label>📅 DATA DE INÍCIO</label>
+          <input type="date" id="dataInicioMensalidade">
+        </div>
+        <div class="input-group">
+          <label>📱 WHATSAPP</label>
+          <input type="tel" id="whatsappAlunoMensalidade" placeholder="(11) 91234-5678" maxlength="15" autocomplete="off">
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="adicionarAlunoMensalidade()">➕ Adicionar</button>
+          <button class="btn btn-secondary" onclick="exportarCSV()">📎 CSV</button>
+        </div>
       </div>
-      <div class="btn-group" style="flex:1;min-width:auto;">
-        <button class="btn btn-secondary" onclick="limparPesquisa()" style="background:#3a2a1a;">✖️ Limpar</button>
+
+      <div class="form-row" style="margin-top:16px;">
+        <div class="input-group search-group" style="flex:3;">
+          <label>🔍 PESQUISAR</label>
+          <input type="text" id="pesquisaAluno" placeholder="Digite para filtrar alunos..." autocomplete="off">
+        </div>
+        <div class="btn-group" style="flex:1;min-width:auto;">
+          <button class="btn btn-secondary" onclick="limparPesquisa()" style="background:#3a2a1a;">✖️ Limpar</button>
+        </div>
+      </div>
+      
+      <div id="searchInfo" class="search-info">
+        <span>📋 Carregando...</span>
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="todos" onclick="aplicarFiltroStatus('todos')">Todos</button>
+          <button class="filter-btn" data-filter="pagos" onclick="aplicarFiltroStatus('pagos')">✅ Pagos</button>
+          <button class="filter-btn" data-filter="pendentes" onclick="aplicarFiltroStatus('pendentes')">⏳ Pendentes</button>
+          <button class="filter-btn" data-filter="vencidos" onclick="aplicarFiltroStatus('vencidos')">🔴 Vencidos</button>
+        </div>
       </div>
     </div>
-    
-    <div id="searchInfo" class="search-info">
-      <span>📋 Carregando...</span>
-      <div class="filter-buttons">
-        <button class="filter-btn active" data-filter="todos" onclick="aplicarFiltroStatus('todos')">Todos</button>
-        <button class="filter-btn" data-filter="pagos" onclick="aplicarFiltroStatus('pagos')">✅ Pagos</button>
-        <button class="filter-btn" data-filter="pendentes" onclick="aplicarFiltroStatus('pendentes')">⏳ Pendentes</button>
-        <button class="filter-btn" data-filter="vencidos" onclick="aplicarFiltroStatus('vencidos')">🔴 Vencidos</button>
-      </div>
+
+    <div class="table-wrapper">
+      <table id="tabelaPagamentos">
+        <thead>
+          <tr><th>📋 ALUNO</th><th colspan="2">JAN</th><th colspan="2">FEV</th><th colspan="2">MAR</th><th colspan="2">ABR</th><th colspan="2">MAI</th><th colspan="2">JUN</th><th colspan="2">JUL</th><th colspan="2">AGO</th><th colspan="2">SET</th><th colspan="2">OUT</th><th colspan="2">NOV</th><th colspan="2">DEZ</th><th>⚙️</th></tr>
+          <tr style="background:#0f1a1f;font-size:0.65rem;"><th></th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th></th></tr>
+        </thead>
+        <tbody id="tabelaBody"></tbody>
+      </table>
     </div>
   </div>
 
-  <div class="table-wrapper">
-    <table id="tabelaPagamentos">
-      <thead>
-        <tr><th>📋 ALUNO</th><th colspan="2">JAN</th><th colspan="2">FEV</th><th colspan="2">MAR</th><th colspan="2">ABR</th><th colspan="2">MAI</th><th colspan="2">JUN</th><th colspan="2">JUL</th><th colspan="2">AGO</th><th colspan="2">SET</th><th colspan="2">OUT</th><th colspan="2">NOV</th><th colspan="2">DEZ</th><th>⚙️</th></tr>
-        <tr style="background:#0f1a1f;font-size:0.65rem;"><th></th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th>✔️</th><th>📅</th><th></th></tr>
-      </thead>
-      <tbody id="tabelaBody"></tbody>
-    </table>
+  <!-- ===== TAB: EVOLUÇÃO & GRADUAÇÕES ===== -->
+  <div class="tab-content" id="tab-evolucao">
+    <div class="evo-header">
+      <div>
+        <h3><i class="fas fa-chart-line"></i> Evolução dos Alunos</h3>
+        <p style="color:var(--text-gray);font-size:0.8rem;">Acompanhe a evolução e graduações dos seus alunos</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-success" onclick="abrirModalAdicionarEvolucao()">
+          <i class="fas fa-plus"></i> Registrar Evolução
+        </button>
+      </div>
+    </div>
+
+    <div class="stats-grid-evo" id="statsEvoGrid">
+      <div class="stat-card">
+        <div class="stat-icon purple"><i class="fas fa-users"></i></div>
+        <div class="stat-info">
+          <h4>Total de Alunos</h4>
+          <div class="value purple" id="statTotalAlunos">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+        <div class="stat-info">
+          <h4>Próximas Graduações</h4>
+          <div class="value orange" id="statProximasGraduacoes">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon gold"><i class="fas fa-award"></i></div>
+        <div class="stat-info">
+          <h4>Graduações Registradas</h4>
+          <div class="value gold" id="statTotalGraduacoes">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="fas fa-bell"></i></div>
+        <div class="stat-info">
+          <h4>Alertas de Carência</h4>
+          <div class="value red" id="statAlertasCarencia">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evolution-grid" id="evolutionGrid"></div>
   </div>
-  
+
   <footer>
-    <span>🧾 Instituto Impacto Social © <span id="anoAtual"></span> • Dados salvos localmente</span>
-    <span class="shortcuts-hint" title="Ctrl+N: Novo | Ctrl+F: Buscar | Ctrl+E: Exportar | Esc: Limpar | Ctrl+R: Relatório">⌨️ Atalhos: Ctrl+N/F/E/R</span>
+    <span>🥋 Dojo Impacto Social © <span id="anoAtual"></span> • Dados salvos localmente</span>
+    <span class="shortcuts-hint" title="Ctrl+N: Novo Aluno | Ctrl+E: Registrar Evolução | Ctrl+F: Buscar | Esc: Limpar">⌨️ Atalhos: Ctrl+N/E/F • Esc</span>
   </footer>
 </div>
 
 <script>
+// ============================================================
+// CONFIGURAÇÕES E ESTADO GLOBAL
+// ============================================================
 const CONFIG = {
   STORAGE_KEY: "impacto_social_v22",
+  STORAGE_EVO_KEY: "impacto_social_evolucao",
+  STORAGE_CONFIG_KEY: "impacto_social_config_grad",
   STORAGE_VALOR_KEY: "impacto_social_valor",
   STORAGE_PIN_KEY: "impacto_social_pin",
   STORAGE_THEME_KEY: "impacto_social_theme",
   PIN_PADRAO: "1234",
   MESES: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-  MESES_CURTOS: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+  MESES_CURTOS: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+  GRADUACOES: ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta']
 };
 
 let alunos = [];
+let evolucoes = [];
+let configGraduacoes = {};
+let valorMensalidade = 100;
 let filtroTexto = "";
 let filtroStatus = "todos";
-let valorMensalidade = 100;
 let pinDigitado = "";
 let pesquisaTimeout = null;
 let currentRelatorioMes = null;
 let currentRelatorioAno = null;
 
-// Variáveis para controle do fluxo de alteração de PIN
+// Variáveis para alteração de PIN
 let pinAtualDigitado = "";
 let novoPINDigitado = "";
 let confirmacaoPINDigitado = "";
 let stepAtual = 1;
+
+// ============================================================
+// UTILITÁRIOS
+// ============================================================
+function formatarDataBR(dataStr) {
+  if (!dataStr) return '-';
+  try { const [ano, mes, dia] = dataStr.split('-'); return `${dia}/${mes}/${ano}`; } catch { return dataStr; }
+}
+
+function showToast(msg, tipo = 'info', duracao = 3000) {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  const ic = {success:'✅', error:'❌', warning:'⚠️', info:'ℹ️'};
+  t.className = `toast ${tipo}`;
+  t.innerHTML = `<span>${ic[tipo] || 'ℹ️'}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => {
+    t.style.animation = 'fadeOut 0.3s ease forwards';
+    setTimeout(() => t.remove(), 300);
+  }, duracao);
+  t.onclick = () => t.remove();
+}
+
+function formatarWhatsApp(numero) {
+  const num = numero.replace(/\D/g,'');
+  if (num.length >= 11) return `(${num.slice(0,2)}) ${num.slice(2,7)}-${num.slice(7)}`;
+  if (num.length >= 10) return `(${num.slice(0,2)}) ${num.slice(2,6)}-${num.slice(6)}`;
+  return numero;
+}
+
+// ============================================================
+// PERSISTÊNCIA - MENSALIDADES
+// ============================================================
+function carregarValorMensalidade() {
+  const v = localStorage.getItem(CONFIG.STORAGE_VALOR_KEY);
+  if(v && !isNaN(parseFloat(v))){ valorMensalidade=parseFloat(v); document.getElementById('valorMensalidade').value=valorMensalidade; }
+}
+
+function carregarDadosMensalidades() {
+  const dadosRaw = localStorage.getItem(CONFIG.STORAGE_KEY);
+  if(dadosRaw){
+    try{
+      const parsed=JSON.parse(dadosRaw);
+      if(Array.isArray(parsed)){
+        alunos=parsed.map(aluno=>({
+          nome: aluno.nome,
+          turma: aluno.turma || "juvenil",
+          dataInicio: aluno.dataInicio || new Date().toISOString().split('T')[0],
+          whatsapp: aluno.whatsapp || "",
+          meses: aluno.meses?.map(m=>({ pago:m.pago===true, diaPagamento:m.diaPagamento||null, mesPagamento:m.mesPagamento||null, anoPagamento:m.anoPagamento||null }))||criarMesesVazios()
+        }));
+      }
+    }catch(e){ alunos=[]; }
+  }
+  alunos.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+}
+
+function salvarMensalidades() {
+  alunos.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(alunos));
+  calcularTotalLucroMensal();
+}
+
+function criarMesesVazios() {
+  return Array(12).fill(null).map(() => ({ pago: false, diaPagamento: null, mesPagamento: null, anoPagamento: null }));
+}
 
 function parseDataPagamento(valor) {
   if (!valor || valor.trim() === "") return { dia: null, mes: null, ano: null };
@@ -1231,21 +1974,25 @@ function parseDataPagamento(valor) {
   if (mes && (mes < 1 || mes > 12)) return { dia: null, mes: null, ano: null };
   return { dia, mes, ano };
 }
+
 function formatarDataPagamento(diaPagamento, mesPagamento, anoPagamento) {
   if (!diaPagamento) return "";
   if (mesPagamento) return `${diaPagamento}/${mesPagamento.toString().padStart(2,'0')}${anoPagamento ? '/' + anoPagamento : ''}`;
   return diaPagamento.toString();
 }
+
 function salvarDataPagamento(aluno, mesIndex, dataString) {
   const parsed = parseDataPagamento(dataString);
   aluno.meses[mesIndex].diaPagamento = parsed.dia;
   aluno.meses[mesIndex].mesPagamento = parsed.mes;
   aluno.meses[mesIndex].anoPagamento = parsed.ano;
 }
+
 function obterDataPagamentoFormatada(aluno, mesIndex) {
   const data = aluno.meses[mesIndex];
   return formatarDataPagamento(data.diaPagamento, data.mesPagamento, data.anoPagamento);
 }
+
 function verificarAtrasoPorMes(aluno, mesIndex, anoRef) {
   const dataPag = aluno.meses[mesIndex];
   if (!dataPag.diaPagamento) return false;
@@ -1255,25 +2002,732 @@ function verificarAtrasoPorMes(aluno, mesIndex, anoRef) {
   const dataAtual = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
   return (!aluno.meses[mesIndex].pago && dataAtual > dataVencimento);
 }
-function criarMesesVazios() { return Array(12).fill(null).map(() => ({ pago: false, diaPagamento: null, mesPagamento: null, anoPagamento: null })); }
-function ordenarAlunos() { alunos.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')); }
-function carregarValorMensalidade() { const v = localStorage.getItem(CONFIG.STORAGE_VALOR_KEY); if(v && !isNaN(parseFloat(v))){ valorMensalidade=parseFloat(v); document.getElementById('valorMensalidade').value=valorMensalidade; } }
-function carregarDados() {
-  const dadosRaw = localStorage.getItem(CONFIG.STORAGE_KEY);
-  if(dadosRaw){
-    try{
-      const parsed=JSON.parse(dadosRaw);
-      if(Array.isArray(parsed)){
-        alunos=parsed.map(aluno=>({ nome:aluno.nome, dataInicio:aluno.dataInicio||new Date().toISOString().split('T')[0], whatsapp:aluno.whatsapp||"", meses:aluno.meses?.map(m=>({ pago:m.pago===true, diaPagamento:m.diaPagamento||null, mesPagamento:m.mesPagamento||null, anoPagamento:m.anoPagamento||null }))||criarMesesVazios() }));
-      }
-    }catch(e){ alunos=[]; }
-  }
-  ordenarAlunos();
-}
-function salvar() { ordenarAlunos(); localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(alunos)); calcularTotalLucroMensal(); }
-function calcularTotalLucroMensal() { const mesAtual=new Date().getMonth(); const totalPagos=alunos.filter(a=>a.meses?.[mesAtual]?.pago).length; const lucro=totalPagos*valorMensalidade; document.getElementById('lucroMensalDisplay').textContent = `R$ ${lucro.toFixed(2).replace('.',',')}`; return { totalPagos, totalAlunos:alunos.length, lucro }; }
 
-function gerarRelatorioCompleto(mes, ano){
+function calcularTotalLucroMensal() {
+  const mesAtual = new Date().getMonth();
+  const totalPagos = alunos.filter(a => a.meses?.[mesAtual]?.pago).length;
+  const lucro = totalPagos * valorMensalidade;
+  const el = document.getElementById('lucroMensalDisplay');
+  if (el) el.textContent = `R$ ${lucro.toFixed(2).replace('.',',')}`;
+  return { totalPagos, totalAlunos: alunos.length, lucro };
+}
+
+// ============================================================
+// PERSISTÊNCIA - EVOLUÇÃO
+// ============================================================
+function carregarEvolucoes() {
+  const dadosRaw = localStorage.getItem(CONFIG.STORAGE_EVO_KEY);
+  if (dadosRaw) {
+    try { evolucoes = JSON.parse(dadosRaw); } catch(e) { evolucoes = []; }
+  } else { evolucoes = []; }
+}
+
+function salvarEvolucoes() {
+  localStorage.setItem(CONFIG.STORAGE_EVO_KEY, JSON.stringify(evolucoes));
+}
+
+function carregarConfigGraduacoes() {
+  const dadosRaw = localStorage.getItem(CONFIG.STORAGE_CONFIG_KEY);
+  if (dadosRaw) {
+    try { configGraduacoes = JSON.parse(dadosRaw); } catch(e) { configGraduacoes = {}; }
+  }
+  if (Object.keys(configGraduacoes).length === 0) {
+    configGraduacoes = {
+      branca: 3,
+      amarela: 4,
+      vermelha: 5,
+      laranja: 5,
+      verde: 6,
+      roxa: 7,
+      marrom: 8,
+      preta: 10
+    };
+    salvarConfigGraduacoes();
+  }
+}
+
+function salvarConfigGraduacoes() {
+  localStorage.setItem(CONFIG.STORAGE_CONFIG_KEY, JSON.stringify(configGraduacoes));
+}
+
+// ============================================================
+// FUNÇÕES DE EVOLUÇÃO & GRADUAÇÃO
+// ============================================================
+function getUltimaEvolucao(alunoIndex) {
+  const evos = evolucoes.filter(e => e.alunoIndex === alunoIndex);
+  if (evos.length === 0) return null;
+  return evos.sort((a, b) => new Date(b.data) - new Date(a.data))[0];
+}
+
+function getTodasEvolucoes(alunoIndex) {
+  return evolucoes.filter(e => e.alunoIndex === alunoIndex).sort((a, b) => new Date(a.data) - new Date(b.data));
+}
+
+function getProximaGraduacao(graduacaoAtual) {
+  const lista = CONFIG.GRADUACOES;
+  const idx = lista.indexOf(graduacaoAtual);
+  if (idx === -1 || idx === lista.length - 1) return null;
+  return lista[idx + 1];
+}
+
+function calcularTempoRestante(dataGraduacao, graduacao) {
+  if (!dataGraduacao) return null;
+  const key = graduacao.toLowerCase();
+  const mesesNecessarios = configGraduacoes[key] || 6;
+  const data = new Date(dataGraduacao);
+  const hoje = new Date();
+  const diffMeses = (hoje.getFullYear() - data.getFullYear()) * 12 + (hoje.getMonth() - data.getMonth());
+  return mesesNecessarios - diffMeses;
+}
+
+// ============================================================
+// RENDERIZAÇÃO - MENSALIDADES
+// ============================================================
+function renderizarTabela() {
+  const tbody = document.getElementById('tabelaBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  const mesAtual = new Date().getMonth();
+  const filtrados = filtrarAlunos();
+  const totalAlunos = alunos.length;
+  const pagosNoMes = alunos.filter(a => a.meses?.[mesAtual]?.pago).length;
+  const progresso = totalAlunos > 0 ? Math.round((pagosNoMes/totalAlunos) * 100) : 0;
+  
+  if (filtrados.length > 0) {
+    const rowResumo = tbody.insertRow();
+    rowResumo.innerHTML = `<td colspan="26" class="month-summary"><div class="month-summary-header"><span class="month-summary-title">📊 ${CONFIG.MESES[mesAtual].toUpperCase()} ${new Date().getFullYear()}</span><div class="progress-bar"><div class="progress-fill" style="width: ${progresso}%"></div></div><span class="progress-text">${pagosNoMes}/${totalAlunos} • ${progresso}%</span><div class="bulk-actions"><button class="btn-small" onclick="marcarTodosPagos(${mesAtual})">✓ Todos Pagos</button><button class="btn-small" style="background:var(--whatsapp-green);" onclick="cobrarPendentes(${mesAtual})">💬 Cobrar Pendentes</button></div></div></td>`;
+  }
+  
+  if (filtrados.length === 0) {
+    const row = tbody.insertRow();
+    const td = row.insertCell();
+    td.colSpan = 26;
+    td.className = 'no-results';
+    td.innerHTML = filtroTexto ? `🔍 Nenhum para "${filtroTexto}"` : "🥋 Nenhum aluno cadastrado.";
+    return;
+  }
+  
+  filtrados.forEach(aluno => {
+    const idxOriginal = alunos.findIndex(a => a.nome === aluno.nome && a.dataInicio === aluno.dataInicio);
+    if (idxOriginal < 0) return;
+    const row = tbody.insertRow();
+    const tdNome = row.insertCell();
+    tdNome.className = 'aluno-info';
+    tdNome.innerHTML = `<div><div style="font-weight:800;color:var(--accent-gold-light);">${aluno.nome}</div><div class="aluno-detail">📅 ${formatarDataBR(aluno.dataInicio)}<br>📱 ${aluno.whatsapp ? formatarWhatsApp(aluno.whatsapp) : 'Não cadastrado'}</div></div>`;
+    
+    for (let m = 0; m < 12; m++) {
+      const pagoMes = aluno.meses[m]?.pago;
+      const atrasadoMes = verificarAtrasoPorMes(aluno, m, new Date().getFullYear());
+      
+      const tdCheck = row.insertCell();
+      tdCheck.style.textAlign = 'center';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = pagoMes;
+      cb.onclick = (function(idx, mes) { return () => togglePagamento(idx, mes); })(idxOriginal, m);
+      if (atrasadoMes) cb.style.accentColor = 'var(--danger-red)';
+      else if (pagoMes) cb.style.accentColor = 'var(--success-green)';
+      tdCheck.appendChild(cb);
+      
+      const tdData = row.insertCell();
+      tdData.className = 'payment-date';
+      const inputData = document.createElement('input');
+      inputData.type = 'text';
+      inputData.placeholder = 'DD/MM';
+      inputData.value = obterDataPagamentoFormatada(aluno, m);
+      if (atrasadoMes) inputData.classList.add('overdue');
+      inputData.onblur = (function(idx, mes) { return (e) => atualizarDataPagamento(idx, mes, e.target.value); })(idxOriginal, m);
+      tdData.appendChild(inputData);
+    }
+    
+    const tdAcao = row.insertCell();
+    tdAcao.className = 'actions';
+    tdAcao.innerHTML = `<button class="whatsapp-btn" onclick="enviarCobrancaWhatsApp(${idxOriginal})">💬 Cobrar</button><button class="edit-btn" onclick="editarAluno(${idxOriginal})">✏️ Editar</button><button class="delete-btn" onclick="removerAluno(${idxOriginal})">🗑️ Excluir</button>`;
+  });
+}
+
+function filtrarAlunos() {
+  const mesAtual = new Date().getMonth();
+  return alunos.filter(aluno => {
+    if (filtroTexto && !aluno.nome.toLowerCase().includes(filtroTexto)) return false;
+    if (filtroStatus === 'todos') return true;
+    if (filtroStatus === 'pagos') return aluno.meses[mesAtual]?.pago;
+    if (filtroStatus === 'pendentes') return !aluno.meses[mesAtual]?.pago;
+    if (filtroStatus === 'vencidos') return verificarAtrasoPorMes(aluno, mesAtual, new Date().getFullYear());
+    return true;
+  });
+}
+
+function atualizarInfoPesquisa() {
+  const filtrados = filtrarAlunos();
+  const { totalAlunos } = calcularTotalLucroMensal();
+  const el = document.getElementById('searchInfo');
+  if (!el) return;
+  el.innerHTML = `<span>📋 ${totalAlunos} alunos | Exibindo: ${filtrados.length} (${filtroStatus === 'todos' ? 'Todos' : filtroStatus === 'pagos' ? '✅ Pagos' : filtroStatus === 'pendentes' ? '⏳ Pendentes' : '🔴 Vencidos'})</span><div class="filter-buttons"><button class="filter-btn ${filtroStatus === 'todos' ? 'active' : ''}" data-filter="todos" onclick="aplicarFiltroStatus('todos')">Todos</button><button class="filter-btn ${filtroStatus === 'pagos' ? 'active' : ''}" data-filter="pagos" onclick="aplicarFiltroStatus('pagos')">✅ Pagos</button><button class="filter-btn ${filtroStatus === 'pendentes' ? 'active' : ''}" data-filter="pendentes" onclick="aplicarFiltroStatus('pendentes')">⏳ Pendentes</button><button class="filter-btn ${filtroStatus === 'vencidos' ? 'active' : ''}" data-filter="vencidos" onclick="aplicarFiltroStatus('vencidos')">🔴 Vencidos</button></div>${filtroTexto ? `<button class="clear-search" onclick="limparPesquisa()">✖️ Limpar</button>` : ''}`;
+}
+
+// ============================================================
+// RENDERIZAÇÃO - EVOLUÇÃO
+// ============================================================
+function renderizarEvolucoes() {
+  const grid = document.getElementById('evolutionGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  if (alunos.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-gray);">
+        <div style="font-size:3rem;margin-bottom:15px;">🥋</div>
+        <h3 style="color:var(--text-offwhite);">Nenhum aluno cadastrado</h3>
+        <p style="font-size:0.85rem;">Clique em "Novo Aluno" para começar a acompanhar a evolução.</p>
+      </div>
+    `;
+    return;
+  }
+
+  let totalAlunos = 0, proximas = 0, alertas = 0;
+
+  alunos.forEach((aluno, index) => {
+    totalAlunos++;
+    const ultima = getUltimaEvolucao(index);
+    const graduacaoAtual = ultima ? ultima.graduacao : 'Branca';
+    const dataUltima = ultima ? ultima.data : aluno.dataInicio || new Date().toISOString().split('T')[0];
+    const obsUltima = ultima ? ultima.obs : 'Início das atividades';
+
+    const proxima = getProximaGraduacao(graduacaoAtual);
+    const restante = calcularTempoRestante(dataUltima, graduacaoAtual);
+
+    if (proxima && restante !== null && restante <= 3) proximas++;
+    if (proxima && restante !== null && restante <= 0) alertas++;
+
+    const statusLabel = restante !== null ? (restante <= 0 ? '🔴 Venceu!' : restante <= 1 ? '🟡 Próximo!' : `✅ ${restante} meses`) : '⏳ Aguardando';
+
+    let alertaHtml = '';
+    if (proxima && restante !== null) {
+      if (restante <= 0) {
+        alertaHtml = `
+          <div class="alerta-graduacao vencido">
+            <span class="icone">🔴</span>
+            <span class="texto"><strong>ALERTA:</strong> Carência VENCIDA! (há ${Math.abs(restante)} meses)</span>
+            <span class="tempo">URGENTE!</span>
+          </div>
+        `;
+      } else if (restante <= 1) {
+        alertaHtml = `
+          <div class="alerta-graduacao proximo">
+            <span class="icone">🟡</span>
+            <span class="texto"><strong>ATENÇÃO:</strong> Carência PRÓXIMA! (${restante} mês)</span>
+            <span class="tempo">⚠️</span>
+          </div>
+        `;
+      } else if (restante <= 3) {
+        alertaHtml = `
+          <div class="alerta-graduacao atencao">
+            <span class="icone">🟠</span>
+            <span class="texto"><strong>ATENÇÃO:</strong> ${restante} meses para vencer</span>
+            <span class="tempo">⏳</span>
+          </div>
+        `;
+      } else {
+        alertaHtml = `
+          <div class="alerta-graduacao sem-alerta">
+            <span class="icone">✅</span>
+            <span class="texto">Tempo suficiente (${restante} meses)</span>
+            <span class="tempo">👍</span>
+          </div>
+        `;
+      }
+    } else if (!proxima) {
+      alertaHtml = `
+        <div class="alerta-graduacao sem-alerta">
+          <span class="icone">🏆</span>
+          <span class="texto">Graduação máxima alcançada!</span>
+          <span class="tempo">🎯</span>
+        </div>
+      `;
+    }
+
+    const turmaEmoji = { infantil: '👶', juvenil: '🧑', adulto: '💪' }[aluno.turma] || '🥋';
+    const turmaLabel = { infantil: 'Infantil', juvenil: 'Juvenil', adulto: 'Adulto' }[aluno.turma] || aluno.turma;
+
+    const card = document.createElement('div');
+    card.className = 'evolution-card';
+    card.innerHTML = `
+      <div class="card-header">
+        <span class="aluno-nome">${aluno.nome} <span style="font-size:0.65rem;font-weight:400;">${turmaEmoji} ${turmaLabel}</span></span>
+        <span class="graduacao-badge">${graduacaoAtual}</span>
+      </div>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="label">📅 Última Graduação</span>
+          <span class="value">${formatarDataBR(dataUltima)}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">📱 WhatsApp</span>
+          <span class="value">${aluno.whatsapp ? formatarWhatsApp(aluno.whatsapp) : 'Não cadastrado'}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">➡️ Próxima Graduação</span>
+          <span class="value destaque">${proxima || '---'}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">⏳ Tempo Restante</span>
+          <span class="value">${statusLabel}</span>
+        </div>
+        <div class="observacao">
+          <i class="fas fa-quote-left"></i> ${obsUltima}
+        </div>
+      </div>
+      ${alertaHtml}
+      <div class="card-footer">
+        <button class="evo-btn promover" ${proxima ? '' : 'disabled'} onclick="${proxima ? `promoverAluno(${index})` : 'showToast(\'✅ Graduação máxima alcançada!\', \'info\')'}">
+          <i class="fas fa-award"></i> Promover
+        </button>
+        <button class="evo-btn editar" onclick="abrirModalEditarEvolucao(${index})">
+          <i class="fas fa-edit"></i> Editar
+        </button>
+        <button class="evo-btn ver-todas" onclick="verTodasEvolucoes(${index})">
+          <i class="fas fa-list"></i> Todas
+        </button>
+        <button class="evo-btn excluir" onclick="excluirEvolucao(${index})">
+          <i class="fas fa-trash"></i> Excluir
+        </button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('statTotalAlunos').textContent = totalAlunos;
+  document.getElementById('statProximasGraduacoes').textContent = proximas;
+  document.getElementById('statTotalGraduacoes').textContent = evolucoes.length;
+  document.getElementById('statAlertasCarencia').textContent = alertas;
+
+  if (alertas > 0) {
+    showToast(`🔔 ${alertas} aluno(s) com carência vencida!`, 'warning', 5000);
+  }
+}
+
+// ============================================================
+// CRUD MENSALIDADES
+// ============================================================
+function adicionarAlunoMensalidade() {
+  const nome = document.getElementById('nomeAlunoMensalidade').value.trim();
+  const dataInicio = document.getElementById('dataInicioMensalidade').value || new Date().toISOString().split('T')[0];
+  const whatsappInput = document.getElementById('whatsappAlunoMensalidade');
+  const whatsapp = whatsappInput.dataset.raw || whatsappInput.value.replace(/\D/g, '');
+  if (!nome) { showToast('❌ Nome obrigatório!', 'error'); return; }
+  if (alunos.some(a => a.nome.toLowerCase().trim() === nome.toLowerCase())) { showToast('⚠️ Aluno já cadastrado!', 'warning'); return; }
+  alunos.push({ nome, dataInicio, whatsapp, turma: 'juvenil', meses: criarMesesVazios() });
+  salvarMensalidades();
+  document.getElementById('nomeAlunoMensalidade').value = '';
+  document.getElementById('whatsappAlunoMensalidade').value = '';
+  document.getElementById('whatsappAlunoMensalidade').dataset.raw = '';
+  renderizarTabela();
+  atualizarInfoPesquisa();
+  renderizarEvolucoes();
+  showToast(`✅ ${nome} adicionado!`, 'success');
+}
+
+function removerAluno(idx) {
+  if (confirm(`🗑️ Remover "${alunos[idx].nome}"?`)) {
+    alunos.splice(idx, 1);
+    salvarMensalidades();
+    renderizarTabela();
+    atualizarInfoPesquisa();
+    renderizarEvolucoes();
+    showToast(`🗑️ removido`, 'info');
+  }
+}
+
+function editarAluno(idx) {
+  const a = alunos[idx];
+  document.getElementById('editIndex').value = idx;
+  document.getElementById('editNome').value = a.nome;
+  document.getElementById('editWhatsapp').value = a.whatsapp ? a.whatsapp.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3') : '';
+  document.getElementById('editDataInicio').value = a.dataInicio;
+  document.getElementById('modalEditar').classList.add('active');
+}
+
+function fecharModalEditar() {
+  document.getElementById('modalEditar').classList.remove('active');
+}
+
+function salvarEdicao() {
+  const idx = parseInt(document.getElementById('editIndex').value);
+  const novoNome = document.getElementById('editNome').value.trim();
+  const novoWhatsappInput = document.getElementById('editWhatsapp');
+  const novoWhatsapp = novoWhatsappInput.dataset.raw || novoWhatsappInput.value.replace(/\D/g, '');
+  const novaData = document.getElementById('editDataInicio').value;
+  if (!novoNome) { showToast('❌ Nome obrigatório!', 'error'); return; }
+  if (alunos.some((a, i) => i !== idx && a.nome.toLowerCase().trim() === novoNome.toLowerCase())) {
+    showToast('⚠️ Nome já existe!', 'warning');
+    return;
+  }
+  alunos[idx].nome = novoNome;
+  alunos[idx].whatsapp = novoWhatsapp;
+  alunos[idx].dataInicio = novaData || alunos[idx].dataInicio;
+  salvarMensalidades();
+  renderizarTabela();
+  fecharModalEditar();
+  renderizarEvolucoes();
+  showToast(`✅ ${novoNome} atualizado!`, 'success');
+}
+
+function togglePagamento(idx, mes) {
+  const aluno = alunos[idx];
+  aluno.meses[mes].pago = !aluno.meses[mes].pago;
+  salvarMensalidades();
+  renderizarTabela();
+  showToast(`${aluno.nome} • ${CONFIG.MESES_CURTOS[mes]}: ${aluno.meses[mes].pago ? '✅ Pago' : '⏳ Pendente'}`, aluno.meses[mes].pago ? 'success' : 'info', 2000);
+}
+
+function atualizarDataPagamento(idx, mes, valor) {
+  salvarDataPagamento(alunos[idx], mes, valor);
+  salvarMensalidades();
+  renderizarTabela();
+}
+
+function enviarCobrancaWhatsApp(idx) {
+  const aluno = alunos[idx];
+  if (!aluno.whatsapp) {
+    showToast(`⚠️ ${aluno.nome} sem WhatsApp!`, 'warning');
+    return;
+  }
+  
+  let num = aluno.whatsapp.replace(/\D/g,'');
+  if (!num.startsWith('55')) num = '55' + num;
+  
+  const mesAtual = new Date().getMonth();
+  const anoAtual = new Date().getFullYear();
+  const mesNome = CONFIG.MESES[mesAtual];
+  const pago = aluno.meses[mesAtual]?.pago;
+  const dataPag = obterDataPagamentoFormatada(aluno, mesAtual);
+  const dataInicioFormatada = aluno.dataInicio ? aluno.dataInicio.split('-').reverse().join('/') : "não informada";
+  
+  const statusTexto = pago ? "✅ PAGO" : "❌ *Pendente*";
+  const aviso = !pago 
+    ? "🔔 Identificamos em nosso sistema que sua mensalidade ainda não foi quitada. Pedimos, por gentileza, que realize o pagamento até a data de vencimento." 
+    : "✅ Agradecemos o pagamento!";
+  
+  let msg = `🏛️ *INSTITUTO IMPACTO SOCIAL – Dojô de Karatê*\n\nOlá, *${aluno.nome}*! Tudo bem?\n\n📆 *Referente à mensalidade de ${mesNome}/${anoAtual}*\n💰 *Valor:* R$ ${valorMensalidade.toFixed(2).replace('.',',')}\n📊 *Status:* ${statusTexto}`;
+  
+  if (!pago && dataPag) msg += `\n📅 *Vencimento:* ${dataPag}`;
+  
+  msg += `\n\n${aviso}\n\n💳 *Formas de pagamento:*\n• PIX: 91991629403\n• Dinheiro (diretamente no dojô)\n• Transferência bancária (consulte-nos)\n\n✨ Após o pagamento, envie o comprovante para que possamos atualizar seu cadastro.\n\n📅 *Início das atividades:* ${dataInicioFormatada}\n🥋 *Dojô Impacto Social – Disciplina e Excelência*`;
+
+  // Copiar para área de transferência
+  const areaTexto = document.createElement("textarea");
+  areaTexto.value = msg;
+  areaTexto.style.position = "fixed";
+  areaTexto.style.left = "-9999px";
+  document.body.appendChild(areaTexto);
+  areaTexto.select();
+  try {
+    document.execCommand('copy');
+    showToast(`📋 Mensagem copiada! Cole no WhatsApp do aluno.`, 'success', 5000);
+  } catch(e) {
+    showToast(`❌ Falha ao copiar.`, 'error');
+  }
+  document.body.removeChild(areaTexto);
+}
+
+function marcarTodosPagos(mes) {
+  if (!confirm(`✅ Marcar TODOS os ${alunos.length} alunos como PAGOS em ${CONFIG.MESES[mes]}?`)) return;
+  let cont = 0;
+  alunos.forEach(aluno => {
+    if (!aluno.meses[mes].pago) {
+      aluno.meses[mes].pago = true;
+      cont++;
+    }
+  });
+  salvarMensalidades();
+  renderizarTabela();
+  showToast(`🎉 ${cont} aluno(s) pagos em ${CONFIG.MESES_CURTOS[mes]}!`, 'success');
+}
+
+function cobrarPendentes(mes) {
+  const pendentes = alunos.filter(a => !a.meses[mes]?.pago && a.whatsapp);
+  if (pendentes.length === 0) {
+    showToast('😊 Nenhum pendente com WhatsApp!', 'info');
+    return;
+  }
+  if (!confirm(`💬 Enviar cobrança para ${pendentes.length} aluno(s)?`)) return;
+  pendentes.forEach((aluno, i) => {
+    setTimeout(() => {
+      const idx = alunos.findIndex(a => a.nome === aluno.nome);
+      if (idx >= 0) enviarCobrancaWhatsApp(idx);
+    }, i * 1000);
+  });
+  showToast(`📤 Enviando ${pendentes.length} cobranças...`, 'info', 3000);
+}
+
+function pesquisarAluno() {
+  filtroTexto = document.getElementById('pesquisaAluno').value.trim().toLowerCase();
+  renderizarTabela();
+  atualizarInfoPesquisa();
+}
+
+function limparPesquisa() {
+  document.getElementById('pesquisaAluno').value = '';
+  filtroTexto = '';
+  renderizarTabela();
+  atualizarInfoPesquisa();
+}
+
+function aplicarFiltroStatus(status) {
+  filtroStatus = status;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === status);
+  });
+  renderizarTabela();
+  atualizarInfoPesquisa();
+}
+
+function atualizarValorMensalidade() {
+  let novoValor = parseFloat(document.getElementById('valorMensalidade').value);
+  if (isNaN(novoValor) || novoValor < 0) {
+    showToast('❌ Valor inválido!', 'error');
+    document.getElementById('valorMensalidade').value = valorMensalidade;
+    return;
+  }
+  valorMensalidade = novoValor;
+  localStorage.setItem(CONFIG.STORAGE_VALOR_KEY, valorMensalidade);
+  calcularTotalLucroMensal();
+  showToast(`💰 Mensalidade: R$ ${valorMensalidade.toFixed(2).replace('.',',')}`, 'success');
+}
+
+function exportarCSV() {
+  if (alunos.length === 0) { showToast('📭 Nenhum aluno', 'warning'); return; }
+  const mesAtual = new Date().getMonth();
+  const filtrados = filtrarAlunos();
+  let csv = ["Nome,Data Início,WhatsApp,Status " + CONFIG.MESES[mesAtual] + "," + CONFIG.MESES.flatMap(m => [`${m} (Pago)`, `${m} (Data)`]).join(",")];
+  filtrados.forEach(aluno => {
+    let row = [`"${aluno.nome.replace(/"/g, '""')}"`, aluno.dataInicio, aluno.whatsapp || "", aluno.meses[mesAtual]?.pago ? "Pago" : "Pendente"];
+    for (let m = 0; m < 12; m++) {
+      row.push(aluno.meses[m].pago ? "Pago" : "Pendente");
+      row.push(obterDataPagamentoFormatada(aluno, m) || "");
+    }
+    csv.push(row.join(","));
+  });
+  const blob = new Blob(["\uFEFF" + csv.join("\n")], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `alunos_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast(`📎 CSV exportado!`, 'success');
+}
+
+// ============================================================
+// CRUD EVOLUÇÃO
+// ============================================================
+function abrirModalAdicionarEvolucao(index = null) {
+  if (alunos.length === 0) {
+    showToast('⚠️ Cadastre um aluno primeiro!', 'warning');
+    return;
+  }
+  const select = document.getElementById('novaEvolucaoAluno');
+  select.innerHTML = alunos.map((a, i) =>
+    `<option value="${i}" ${i === index ? 'selected' : ''}>${a.nome}</option>`
+  ).join('');
+
+  const gradSelect = document.getElementById('novaEvolucaoGraduacao');
+  gradSelect.innerHTML = CONFIG.GRADUACOES.map(g => `<option value="${g}">${g}</option>`).join('');
+
+  document.getElementById('novaEvolucaoData').value = new Date().toISOString().split('T')[0];
+  document.getElementById('novaEvolucaoObs').value = '';
+  document.getElementById('modalAdicionarEvolucao').classList.add('active');
+}
+
+function salvarNovaEvolucao() {
+  const alunoIndex = parseInt(document.getElementById('novaEvolucaoAluno').value);
+  const graduacao = document.getElementById('novaEvolucaoGraduacao').value;
+  const data = document.getElementById('novaEvolucaoData').value;
+  const obs = document.getElementById('novaEvolucaoObs').value.trim();
+
+  if (isNaN(alunoIndex)) { showToast('❌ Selecione um aluno!', 'error'); return; }
+
+  evolucoes.push({ alunoIndex, graduacao, data, obs: obs || 'Nova graduação registrada.' });
+  salvarEvolucoes();
+  renderizarEvolucoes();
+  fecharModalAdicionarEvolucao();
+  showToast('🥋 Evolução registrada!', 'success');
+}
+
+function abrirModalEditarEvolucao(alunoIndex) {
+  const ultima = getUltimaEvolucao(alunoIndex);
+  if (!ultima) {
+    showToast('⚠️ Este aluno não tem evolução registrada!', 'warning');
+    return;
+  }
+
+  const idx = evolucoes.indexOf(ultima);
+  document.getElementById('editEvolucaoIndex').value = idx;
+
+  const selectAluno = document.getElementById('editEvolucaoAluno');
+  selectAluno.innerHTML = alunos.map((a, i) =>
+    `<option value="${i}" ${i === alunoIndex ? 'selected' : ''}>${a.nome}</option>`
+  ).join('');
+
+  const gradSelect = document.getElementById('editEvolucaoGraduacao');
+  gradSelect.innerHTML = CONFIG.GRADUACOES.map(g =>
+    `<option value="${g}" ${g === ultima.graduacao ? 'selected' : ''}>${g}</option>`
+  ).join('');
+
+  document.getElementById('editEvolucaoData').value = ultima.data;
+  document.getElementById('editEvolucaoObs').value = ultima.obs || '';
+  document.getElementById('modalEditarEvolucao').classList.add('active');
+}
+
+function salvarEdicaoEvolucao() {
+  const idx = parseInt(document.getElementById('editEvolucaoIndex').value);
+  const alunoIndex = parseInt(document.getElementById('editEvolucaoAluno').value);
+  const graduacao = document.getElementById('editEvolucaoGraduacao').value;
+  const data = document.getElementById('editEvolucaoData').value;
+  const obs = document.getElementById('editEvolucaoObs').value.trim();
+
+  evolucoes[idx] = { alunoIndex, graduacao, data, obs: obs || 'Evolução atualizada.' };
+  salvarEvolucoes();
+  renderizarEvolucoes();
+  fecharModalEditarEvolucao();
+  showToast('✅ Evolução atualizada!', 'success');
+}
+
+function promoverAluno(alunoIndex) {
+  const ultima = getUltimaEvolucao(alunoIndex);
+  if (!ultima) {
+    showToast('⚠️ Aluno sem evolução registrada!', 'warning');
+    return;
+  }
+
+  const prox = getProximaGraduacao(ultima.graduacao);
+  if (!prox) {
+    showToast('⚠️ Aluno já está na graduação mais alta!', 'warning');
+    return;
+  }
+
+  if (!confirm(`🎯 Promover "${alunos[alunoIndex].nome}" de ${ultima.graduacao} para ${prox}?`)) return;
+
+  evolucoes.push({
+    alunoIndex,
+    graduacao: prox,
+    data: new Date().toISOString().split('T')[0],
+    obs: `🎉 Promovido de ${ultima.graduacao} para ${prox}`
+  });
+
+  salvarEvolucoes();
+  renderizarEvolucoes();
+  showToast(`🎉 ${alunos[alunoIndex].nome} promovido para ${prox}!`, 'success');
+}
+
+function verTodasEvolucoes(alunoIndex) {
+  const todas = getTodasEvolucoes(alunoIndex);
+  if (todas.length === 0) {
+    showToast('📋 Nenhuma evolução registrada para este aluno.', 'info');
+    return;
+  }
+
+  let msg = `📊 Histórico de ${alunos[alunoIndex].nome}:\n\n`;
+  todas.forEach((e, i) => {
+    msg += `${i + 1}. ${e.graduacao} - ${formatarDataBR(e.data)}\n   📝 ${e.obs || 'Sem observações'}\n\n`;
+  });
+  alert(msg);
+}
+
+function excluirEvolucao(alunoIndex) {
+  if (!confirm(`🗑️ Remover todas as evoluções de "${alunos[alunoIndex].nome}"?`)) return;
+  evolucoes = evolucoes.filter(e => e.alunoIndex !== alunoIndex);
+  salvarEvolucoes();
+  renderizarEvolucoes();
+  showToast(`🗑️ Evoluções de ${alunos[alunoIndex].nome} removidas`, 'info');
+}
+
+function fecharModalEditarEvolucao() {
+  document.getElementById('modalEditarEvolucao').classList.remove('active');
+}
+function fecharModalAdicionarEvolucao() {
+  document.getElementById('modalAdicionarEvolucao').classList.remove('active');
+}
+function fecharModalAlterarPIN() {
+  document.getElementById('modalAlterarPIN').classList.remove('active');
+}
+
+// ============================================================
+// CONFIGURAÇÕES DE GRADUAÇÃO
+// ============================================================
+function abrirModalConfigGraduacoes() {
+  renderizarConfigGraduacoesModal();
+  document.getElementById('modalConfigGraduacoes').classList.add('active');
+}
+
+function fecharModalConfigGraduacoes() {
+  document.getElementById('modalConfigGraduacoes').classList.remove('active');
+}
+
+function renderizarConfigGraduacoesModal() {
+  const list = document.getElementById('graduacaoConfigListModal');
+  list.innerHTML = '';
+
+  const listaGraduacoes = ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta'];
+
+  listaGraduacoes.forEach(grad => {
+    const key = grad.toLowerCase();
+    const tempo = configGraduacoes[key] || 6;
+    const div = document.createElement('div');
+    div.className = 'graduacao-item-foto';
+    div.innerHTML = `
+      <i class="fas fa-award"></i>
+      <span class="nome-faixa">${grad}</span>
+      <span class="label-tempo">Tempo mínimo para próxima graduação</span>
+      <div class="controle-foto">
+        <input type="number" min="1" max="24" value="${tempo}" data-graduacao="${grad}" class="input-tempo-graduacao-foto">
+        <span class="unidade">meses</span>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function salvarConfigGraduacoesModal() {
+  const inputs = document.querySelectorAll('.input-tempo-graduacao-foto');
+  inputs.forEach(input => {
+    const graduacao = input.dataset.graduacao.toLowerCase();
+    const valor = parseInt(input.value);
+    if (valor > 0) {
+      configGraduacoes[graduacao] = valor;
+    }
+  });
+  salvarConfigGraduacoes();
+  renderizarEvolucoes();
+  fecharModalConfigGraduacoes();
+  showToast('✅ Configurações salvas!', 'success');
+}
+
+function restaurarConfigGraduacoes() {
+  if (!confirm('🔄 Restaurar valores padrão das graduações?')) return;
+  const valoresPadrao = {
+    branca: 3,
+    amarela: 4,
+    vermelha: 5,
+    laranja: 5,
+    verde: 6,
+    roxa: 7,
+    marrom: 8,
+    preta: 10
+  };
+  Object.keys(valoresPadrao).forEach(key => {
+    configGraduacoes[key] = valoresPadrao[key];
+  });
+  salvarConfigGraduacoes();
+  renderizarConfigGraduacoesModal();
+  renderizarEvolucoes();
+  showToast('🔄 Configurações restauradas!', 'info');
+}
+
+// ============================================================
+// RELATÓRIO
+// ============================================================
+function gerarRelatorioCompleto(mes, ano) {
   const pagos = alunos.filter(a => a.meses[mes]?.pago).length;
   const pendentes = alunos.length - pagos;
   const receita = pagos * valorMensalidade;
@@ -1295,251 +2749,342 @@ function gerarRelatorioCompleto(mes, ano){
     <div style="margin-top:15px;font-size:0.7rem;color:var(--text-gray);text-align:center;">Total de Alunos: ${alunos.length}<br>Valor da Mensalidade: R$ ${valorMensalidade.toFixed(2)}</div>
   `;
 }
-function atualizarRelatorioPorPeriodo(){
+
+function atualizarRelatorioPorPeriodo() {
   const mes = parseInt(document.getElementById('relatorioMesSelect').value);
   const ano = parseInt(document.getElementById('relatorioAnoSelect').value);
-  if(isNaN(mes) || isNaN(ano)) return;
-  currentRelatorioMes = mes; currentRelatorioAno = ano;
+  if (isNaN(mes) || isNaN(ano)) return;
+  currentRelatorioMes = mes;
+  currentRelatorioAno = ano;
   document.getElementById('relatorioBody').innerHTML = gerarRelatorioCompleto(mes, ano);
 }
-function gerarRelatorioMensal(){
+
+function gerarRelatorioMensal() {
   const hoje = new Date();
   const mesAtual = hoje.getMonth();
   const anoAtual = hoje.getFullYear();
   const mesSelect = document.getElementById('relatorioMesSelect');
   const anoSelect = document.getElementById('relatorioAnoSelect');
   mesSelect.innerHTML = '';
-  for(let m=0; m<12; m++){ const opt=document.createElement('option'); opt.value=m; opt.textContent=CONFIG.MESES[m]; if(m===mesAtual) opt.selected=true; mesSelect.appendChild(opt); }
+  for (let m = 0; m < 12; m++) {
+    const opt = document.createElement('option');
+    opt.value = m;
+    opt.textContent = CONFIG.MESES[m];
+    if (m === mesAtual) opt.selected = true;
+    mesSelect.appendChild(opt);
+  }
   anoSelect.innerHTML = '';
-  const anos = Array.from({length:5}, (_,i)=>anoAtual-2+i);
-  anos.forEach(a=>{ const opt=document.createElement('option'); opt.value=a; opt.textContent=a; if(a===anoAtual) opt.selected=true; anoSelect.appendChild(opt); });
+  const anos = Array.from({ length: 5 }, (_, i) => anoAtual - 2 + i);
+  anos.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a;
+    opt.textContent = a;
+    if (a === anoAtual) opt.selected = true;
+    anoSelect.appendChild(opt);
+  });
   currentRelatorioMes = mesAtual;
   currentRelatorioAno = anoAtual;
   document.getElementById('relatorioBody').innerHTML = gerarRelatorioCompleto(mesAtual, anoAtual);
   document.getElementById('modalRelatorio').classList.add('active');
 }
-function fecharModalRelatorio() { document.getElementById('modalRelatorio').classList.remove('active'); }
-function exportarPDF() { fecharModalRelatorio(); showToast('📄 Preparando impressão... Use Ctrl+P', 'info', 3000); setTimeout(()=>window.print(), 500); }
 
-function adicionarAluno(){
-  const nome = document.getElementById('nomeAluno').value.trim();
-  const dataInicio = document.getElementById('dataInicio').value || new Date().toISOString().split('T')[0];
-  const whatsappInput = document.getElementById('whatsappAluno');
-  const whatsapp = whatsappInput.dataset.raw || whatsappInput.value.replace(/\D/g, '');
-  if(!nome){ showToast('❌ Nome obrigatório!', 'error'); document.getElementById('nomeAluno').focus(); return; }
-  if(alunos.some(a=> a.nome.toLowerCase().trim() === nome.toLowerCase())){ showToast('⚠️ Aluno já cadastrado!', 'warning'); return; }
-  alunos.push({ nome, dataInicio, whatsapp, meses: criarMesesVazios() });
-  salvar();
-  document.getElementById('nomeAluno').value = '';
-  document.getElementById('whatsappAluno').value = '';
-  document.getElementById('whatsappAluno').dataset.raw = '';
-  renderizarTabela();
-  atualizarInfoPesquisa();
-  showToast(`✅ ${nome} adicionado!`, 'success');
-}
-function removerAluno(idx) { if(confirm(`🗑️ Remover "${alunos[idx].nome}"?`)){ alunos.splice(idx,1); salvar(); renderizarTabela(); atualizarInfoPesquisa(); showToast(`🗑️ removido`, 'info'); } }
-function editarAluno(idx){ const a=alunos[idx]; document.getElementById('editIndex').value=idx; document.getElementById('editNome').value=a.nome; document.getElementById('editWhatsapp').value=a.whatsapp? a.whatsapp.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3'):''; document.getElementById('editDataInicio').value=a.dataInicio; document.getElementById('modalEditar').classList.add('active'); }
-function fecharModalEditar(){ document.getElementById('modalEditar').classList.remove('active'); }
-function salvarEdicao(){ const idx=parseInt(document.getElementById('editIndex').value); const novoNome=document.getElementById('editNome').value.trim(); const novoWhatsappInput=document.getElementById('editWhatsapp'); const novoWhatsapp=novoWhatsappInput.dataset.raw||novoWhatsappInput.value.replace(/\D/g,''); const novaData=document.getElementById('editDataInicio').value; if(!novoNome){ showToast('❌ Nome obrigatório!','error'); return; } if(alunos.some((a,i)=>i!==idx && a.nome.toLowerCase().trim()===novoNome.toLowerCase())){ showToast('⚠️ Nome já existe!','warning'); return; } alunos[idx].nome=novoNome; alunos[idx].whatsapp=novoWhatsapp; alunos[idx].dataInicio=novaData||alunos[idx].dataInicio; salvar(); renderizarTabela(); fecharModalEditar(); showToast(`✅ ${novoNome} atualizado!`, 'success'); }
-function togglePagamento(idx, mes){ const aluno=alunos[idx]; aluno.meses[mes].pago=!aluno.meses[mes].pago; salvar(); renderizarTabela(); showToast(`${aluno.nome} • ${CONFIG.MESES_CURTOS[mes]}: ${aluno.meses[mes].pago ? '✅ Pago' : '⏳ Pendente'}`, aluno.meses[mes].pago ? 'success' : 'info', 2000); }
-function atualizarDataPagamento(idx, mes, valor){ salvarDataPagamento(alunos[idx], mes, valor); salvar(); renderizarTabela(); }
-
-// ✅ FUNÇÃO CORRIGIDA - WhatsApp com encodeURIComponent
- function enviarCobrancaWhatsApp(idx){ 
-  const aluno = alunos[idx]; 
-  
-  if(!aluno.whatsapp){ 
-    showToast(`⚠️ ${aluno.nome} sem WhatsApp!`, 'warning'); 
-    return; 
-  } 
-  
-  let num = aluno.whatsapp.replace(/\D/g,''); 
-  if(!num.startsWith('55')) num = '55' + num; 
-  
-  const mesAtual = new Date().getMonth(); 
-  const anoAtual = new Date().getFullYear(); 
-  const mesNome = CONFIG.MESES[mesAtual]; 
-  const pago = aluno.meses[mesAtual]?.pago; 
-  const dataPag = obterDataPagamentoFormatada(aluno, mesAtual); 
-  const dataInicioFormatada = aluno.dataInicio ? aluno.dataInicio.split('-').reverse().join('/') : "não informada"; 
-  
-  const statusTexto = pago ? "✅ PAGO" : "❌ *Pendente*"; 
-  const aviso = !pago 
-    ? "🔔 Identificamos em nosso sistema que sua mensalidade ainda não foi quitada. Pedimos, por gentileza, que realize o pagamento até a data de vencimento." 
-    : "✅ Agradecemos o pagamento!"; 
-  
-  let msg = `🏛️ *INSTITUTO IMPACTO SOCIAL – Dojô de Karatê*\n\nOlá, *${aluno.nome}*! Tudo bem?\n\n📆 *Referente à mensalidade de ${mesNome}/${anoAtual}*\n💰 *Valor:* R$ ${valorMensalidade.toFixed(2).replace('.',',')}\n📊 *Status:* ${statusTexto}`; 
-  
-  if(!pago && dataPag) msg += `\n📅 *Vencimento:* ${dataPag}`; 
-  
-  msg += `\n\n${aviso}\n\n💳 *Formas de pagamento:*\n• PIX: 91991629403\n• Dinheiro (diretamente no dojô)\n• Transferência bancária (consulte-nos)\n\n✨ Após o pagamento, envie o comprovante para que possamos atualizar seu cadastro.\n\n📅 *Início das atividades:* ${dataInicioFormatada}\n🥋 *Dojô Impacto Social – Disciplina e Excelência*`; 
-
-  // FORÇA APENAS A CÓPIA DENTRO DO APLICATIVO
-  function copiarTexto(texto) {
-    const areaTexto = document.createElement("textarea");
-    areaTexto.value = texto;
-    areaTexto.style.position = "fixed";
-    areaTexto.style.left = "-9999px";
-    document.body.appendChild(areaTexto);
-    areaTexto.select();
-    try {
-      document.execCommand('copy');
-      showToast(`📋 COPIADO! Abra o WhatsApp do aluno e cole.`, 'success', 5000);
-    } catch(e) {
-      showToast(`❌ Falha ao copiar.`, 'error');
-    }
-    document.body.removeChild(areaTexto);
-  }
-
-  copiarTexto(msg);
-  return false; // Impede qualquer outra ação do celular
-}
-  
-
-function marcarTodosPagos(mes){ if(!confirm(`✅ Marcar TODOS os ${alunos.length} alunos como PAGOS em ${CONFIG.MESES[mes]}?`)) return; let cont=0; alunos.forEach(aluno=>{ if(!aluno.meses[mes].pago){ aluno.meses[mes].pago=true; cont++; } }); salvar(); renderizarTabela(); showToast(`🎉 ${cont} aluno(s) pagos em ${CONFIG.MESES_CURTOS[mes]}!`, 'success'); }
-function cobrarPendentes(mes){ const pendentes=alunos.filter(a=>!a.meses[mes]?.pago && a.whatsapp); if(pendentes.length===0){ showToast('😊 Nenhum pendente com WhatsApp!', 'info'); return; } if(!confirm(`💬 Enviar cobrança para ${pendentes.length} aluno(s)?`)) return; pendentes.forEach((aluno,i)=>{ setTimeout(()=>{ const idx=alunos.findIndex(a=>a.nome===aluno.nome); if(idx>=0) enviarCobrancaWhatsApp(idx); }, i*1000); }); showToast(`📤 Enviando ${pendentes.length} cobranças...`, 'info', 3000); }
-function pesquisarAluno(){ filtroTexto=document.getElementById('pesquisaAluno').value.trim().toLowerCase(); renderizarTabela(); atualizarInfoPesquisa(); }
-function limparPesquisa(){ document.getElementById('pesquisaAluno').value=''; filtroTexto=''; renderizarTabela(); atualizarInfoPesquisa(); }
-function aplicarFiltroStatus(status){ filtroStatus=status; document.querySelectorAll('.filter-btn').forEach(btn=>{ btn.classList.toggle('active', btn.dataset.filter===status); }); renderizarTabela(); atualizarInfoPesquisa(); }
-function filtrarAlunos(){ const mesAtual=new Date().getMonth(); return alunos.filter(aluno=>{ if(filtroTexto && !aluno.nome.toLowerCase().includes(filtroTexto)) return false; if(filtroStatus==='todos') return true; if(filtroStatus==='pagos') return aluno.meses[mesAtual]?.pago; if(filtroStatus==='pendentes') return !aluno.meses[mesAtual]?.pago; if(filtroStatus==='vencidos') return verificarAtrasoPorMes(aluno, mesAtual, new Date().getFullYear()); return true; }); }
-function atualizarInfoPesquisa(){
-  const filtrados=filtrarAlunos();
-  const {totalAlunos}=calcularTotalLucroMensal();
-  document.getElementById('searchInfo').innerHTML=`<span>📋 ${totalAlunos} alunos | Exibindo: ${filtrados.length} (${filtroStatus==='todos'?'Todos':filtroStatus==='pagos'?'✅ Pagos':filtroStatus==='pendentes'?'⏳ Pendentes':'🔴 Vencidos'})</span><div class="filter-buttons"><button class="filter-btn ${filtroStatus==='todos'?'active':''}" data-filter="todos" onclick="aplicarFiltroStatus('todos')">Todos</button><button class="filter-btn ${filtroStatus==='pagos'?'active':''}" data-filter="pagos" onclick="aplicarFiltroStatus('pagos')">✅ Pagos</button><button class="filter-btn ${filtroStatus==='pendentes'?'active':''}" data-filter="pendentes" onclick="aplicarFiltroStatus('pendentes')">⏳ Pendentes</button><button class="filter-btn ${filtroStatus==='vencidos'?'active':''}" data-filter="vencidos" onclick="aplicarFiltroStatus('vencidos')">🔴 Vencidos</button></div>${filtroTexto?`<button class="clear-search" onclick="limparPesquisa()">✖️ Limpar</button>`:''}`;
-}
-function formatarDataBR(dataStr){ if(!dataStr) return '-'; try{ const [ano,mes,dia]=dataStr.split('-'); return `${dia}/${mes}/${ano}`; }catch{ return dataStr; } }
-function formatarWhatsAppDisplay(numero){ const num=numero.replace(/\D/g,''); if(num.length>=11) return `(${num.slice(0,2)}) ${num.slice(2,7)}-${num.slice(7)}`; if(num.length>=10) return `(${num.slice(0,2)}) ${num.slice(2,6)}-${num.slice(6)}`; return numero; }
-function exportarCSV(){ if(alunos.length===0){ showToast('📭 Nenhum aluno','warning'); return; } const mesAtual=new Date().getMonth(); const filtrados=filtrarAlunos(); let csv=["Nome,Data Início,WhatsApp,Status "+CONFIG.MESES[mesAtual]+","+CONFIG.MESES.flatMap(m=>[`${m} (Pago)`,`${m} (Data)`]).join(",")]; filtrados.forEach(aluno=>{ let row=[`"${aluno.nome.replace(/"/g,'""')}"`, aluno.dataInicio, aluno.whatsapp||"", aluno.meses[mesAtual]?.pago?"Pago":"Pendente"]; for(let m=0;m<12;m++){ row.push(aluno.meses[m].pago?"Pago":"Pendente"); row.push(obterDataPagamentoFormatada(aluno,m)||""); } csv.push(row.join(",")); }); const blob=new Blob(["\uFEFF"+csv.join("\n")],{type:"text/csv;charset=utf-8"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`alunos_${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(a.href); showToast(`📎 CSV exportado!`, 'success'); }
-function backupDados(){ const dados={ versao:"2.3", dataBackup:new Date().toISOString(), valorMensalidade, alunos }; const blob=new Blob([JSON.stringify(dados,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`backup_dojo_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(a.href); showToast('💾 Backup realizado!', 'success'); }
-function restaurarDados(){ const input=document.createElement('input'); input.type='file'; input.accept='.json'; input.onchange=(e)=>{ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=(event)=>{ try{ const dados=JSON.parse(event.target.result); if(!dados.alunos||!Array.isArray(dados.alunos)) throw new Error('Inválido'); if(!confirm('🔄 Restaurar backup? Isso substituirá todos os dados.')) return; alunos=dados.alunos.map(a=>({ nome:a.nome, dataInicio:a.dataInicio, whatsapp:a.whatsapp||"", meses:a.meses?.map(m=>({ pago:m.pago===true, diaPagamento:m.diaPagamento||null, mesPagamento:m.mesPagamento||null, anoPagamento:m.anoPagamento||null }))||criarMesesVazios() })); if(dados.valorMensalidade!==undefined){ valorMensalidade=dados.valorMensalidade; document.getElementById('valorMensalidade').value=valorMensalidade; localStorage.setItem(CONFIG.STORAGE_VALOR_KEY,valorMensalidade); } salvar(); renderizarTabela(); atualizarInfoPesquisa(); showToast(`✅ Restaurado! ${alunos.length} alunos`, 'success',4000); }catch(err){ showToast(`❌ Erro: ${err.message}`, 'error',5000); } }; reader.readAsText(file); }; input.click(); }
-function atualizarValorMensalidade(){ let novoValor=parseFloat(document.getElementById('valorMensalidade').value); if(isNaN(novoValor)||novoValor<0){ showToast('❌ Valor inválido!','error'); document.getElementById('valorMensalidade').value=valorMensalidade; return; } valorMensalidade=novoValor; localStorage.setItem(CONFIG.STORAGE_VALOR_KEY,valorMensalidade); calcularTotalLucroMensal(); showToast(`💰 Mensalidade: R$ ${valorMensalidade.toFixed(2).replace('.',',')}`, 'success'); }
-function renderizarTabela(){ const tbody=document.getElementById('tabelaBody'); tbody.innerHTML=''; const mesAtual=new Date().getMonth(); const filtrados=filtrarAlunos(); const totalAlunos=alunos.length; const pagosNoMes=alunos.filter(a=>a.meses[mesAtual]?.pago).length; const progresso=totalAlunos>0?Math.round((pagosNoMes/totalAlunos)*100):0; if(filtrados.length>0){ const rowResumo=tbody.insertRow(); rowResumo.innerHTML=`<td colspan="26" class="month-summary"><div class="month-summary-header"><span class="month-summary-title">📊 ${CONFIG.MESES[mesAtual].toUpperCase()} ${new Date().getFullYear()}</span><div class="progress-bar"><div class="progress-fill" style="width: ${progresso}%"></div></div><span class="progress-text">${pagosNoMes}/${totalAlunos} • ${progresso}%</span><div class="bulk-actions"><button class="btn-small" onclick="marcarTodosPagos(${mesAtual})">✓ Todos Pagos</button><button class="btn-small" style="background:var(--whatsapp-green);" onclick="cobrarPendentes(${mesAtual})">💬 Cobrar Pendentes</button></div></div></td>`; } if(filtrados.length===0){ const row=tbody.insertRow(); const td=row.insertCell(); td.colSpan=26; td.className='no-results'; td.innerHTML=filtroTexto?`🔍 Nenhum para "${filtroTexto}"`:"🥋 Nenhum aluno cadastrado."; return; } filtrados.forEach(aluno=>{ const idxOriginal=alunos.findIndex(a=>a.nome===aluno.nome && a.dataInicio===aluno.dataInicio); if(idxOriginal<0) return; const row=tbody.insertRow(); const tdNome=row.insertCell(); tdNome.className='aluno-info'; tdNome.innerHTML=`<div><div style="font-weight:800;color:var(--accent-gold-light);">${aluno.nome}</div><div class="aluno-detail">📅 ${formatarDataBR(aluno.dataInicio)}<br>📱 ${aluno.whatsapp?formatarWhatsAppDisplay(aluno.whatsapp):'Não cadastrado'}</div></div>`; for(let m=0;m<12;m++){ const pagoMes=aluno.meses[m]?.pago; const atrasadoMes=verificarAtrasoPorMes(aluno, m, new Date().getFullYear()); const tdCheck=row.insertCell(); tdCheck.style.textAlign='center'; const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=pagoMes; cb.onclick=(function(idx,mes){ return ()=>togglePagamento(idx,mes); })(idxOriginal,m); if(atrasadoMes) cb.style.accentColor='var(--danger-red)'; else if(pagoMes) cb.style.accentColor='var(--success-green)'; tdCheck.appendChild(cb); const tdData=row.insertCell(); tdData.className='payment-date'; const inputData=document.createElement('input'); inputData.type='text'; inputData.placeholder='DD/MM'; inputData.value=obterDataPagamentoFormatada(aluno,m); if(atrasadoMes) inputData.classList.add('overdue'); inputData.onblur=(function(idx,mes){ return (e)=>atualizarDataPagamento(idx,mes,e.target.value); })(idxOriginal,m); tdData.appendChild(inputData); } const tdAcao=row.insertCell(); tdAcao.className='actions'; tdAcao.innerHTML=`<button class="whatsapp-btn" onclick="enviarCobrancaWhatsApp(${idxOriginal})">💬 Cobrar</button><button class="edit-btn" onclick="editarAluno(${idxOriginal})">✏️ Editar</button><button class="delete-btn" onclick="removerAluno(${idxOriginal})">🗑️ Excluir</button>`; }); }
-
-// Funções de alteração de PIN
-function redefinirPIN(e){
-  e.preventDefault();
-  pinAtualDigitado = "";
-  novoPINDigitado = "";
-  confirmacaoPINDigitado = "";
-  stepAtual = 1;
-  
-  document.querySelectorAll('.pin-digit-confirm, .pin-digit-novo, .pin-digit-confirmacao')
-    .forEach(input => input.value = '');
-  document.getElementById('errorConfirmarPIN').textContent = '';
-  document.getElementById('errorConfirmarNovo').textContent = '';
-  document.getElementById('novoPINStrength').textContent = '';
-  
-  document.getElementById('stepAtual').style.display = 'block';
-  document.getElementById('stepNovoPIN').style.display = 'none';
-  document.getElementById('stepConfirmarNovo').style.display = 'none';
-  document.getElementById('btnVoltarStep').style.display = 'none';
-  
-  setTimeout(() => {
-    document.querySelector('.pin-digit-confirm[data-index="0"]').focus();
-  }, 300);
-  
-  document.getElementById('modalAlterarPIN').classList.add('active');
+function fecharModalRelatorio() {
+  document.getElementById('modalRelatorio').classList.remove('active');
 }
 
-function fecharModalAlterarPIN(){
-  document.getElementById('modalAlterarPIN').classList.remove('active');
-  pinAtualDigitado = "";
-  novoPINDigitado = "";
-  confirmacaoPINDigitado = "";
-  stepAtual = 1;
+function exportarPDF() {
+  fecharModalRelatorio();
+  showToast('📄 Preparando impressão... Use Ctrl+P', 'info', 3000);
+  setTimeout(() => window.print(), 500);
 }
 
-function configurarInputsAlteracaoPIN(){
-  document.querySelectorAll('.pin-digit-confirm').forEach((input, index) => {
-    input.addEventListener('input', (e) => {
-      const valor = e.target.value.replace(/\D/g, '');
-      if(valor){
-        pinAtualDigitado += valor;
-        if(index < 3) document.querySelectorAll('.pin-digit-confirm')[index+1].focus();
-        if(pinAtualDigitado.length === 4) confirmarPINAtual();
-      }
-    });
-    input.addEventListener('keydown', (e) => {
-      if(e.key === 'Backspace' && !e.target.value && index > 0){
-        pinAtualDigitado = pinAtualDigitado.slice(0, -1);
-        document.querySelectorAll('.pin-digit-confirm')[index-1].focus();
-      }
-    });
-  });
-  
-  document.querySelectorAll('.pin-digit-novo').forEach((input, index) => {
-    input.addEventListener('input', (e) => {
-      const valor = e.target.value.replace(/\D/g, '');
-      if(valor){
-        novoPINDigitado += valor;
-        atualizarIndicadorForcaPIN();
-        if(index < 3) document.querySelectorAll('.pin-digit-novo')[index+1].focus();
-        if(novoPINDigitado.length === 4) {
-          setTimeout(() => avançarParaConfirmacao(), 300);
-        }
-      }
-    });
-    input.addEventListener('keydown', (e) => {
-      if(e.key === 'Backspace' && !e.target.value && index > 0){
-        novoPINDigitado = novoPINDigitado.slice(0, -1);
-        atualizarIndicadorForcaPIN();
-        document.querySelectorAll('.pin-digit-novo')[index-1].focus();
-      }
-    });
-  });
-  
-  document.querySelectorAll('.pin-digit-confirmacao').forEach((input, index) => {
-    input.addEventListener('input', (e) => {
-      const valor = e.target.value.replace(/\D/g, '');
-      if(valor){
-        confirmacaoPINDigitado += valor;
-        if(index < 3) document.querySelectorAll('.pin-digit-confirmacao')[index+1].focus();
-        if(confirmacaoPINDigitado.length === 4) salvarNovoPIN();
-      }
-    });
-    input.addEventListener('keydown', (e) => {
-      if(e.key === 'Backspace' && !e.target.value && index > 0){
-        confirmacaoPINDigitado = confirmacaoPINDigitado.slice(0, -1);
-        document.querySelectorAll('.pin-digit-confirmacao')[index-1].focus();
-      }
-    });
-  });
-}
+// ============================================================
+// BACKUP E RESTAURAÇÃO (Copiar e Colar)
+// ============================================================
+function backupDados() {
+  const dados = {
+    versao: "2.5",
+    dataBackup: new Date().toISOString(),
+    valorMensalidade,
+    alunos: alunos.map(a => ({
+      nome: a.nome,
+      turma: a.turma || "juvenil",
+      dataInicio: a.dataInicio,
+      whatsapp: a.whatsapp || "",
+      meses: a.meses.map(m => ({
+        pago: m.pago,
+        diaPagamento: m.diaPagamento,
+        mesPagamento: m.mesPagamento,
+        anoPagamento: m.anoPagamento
+      }))
+    })),
+    evolucoes,
+    configGraduacoes
+  };
 
-function atualizarIndicadorForcaPIN(){
-  const indicator = document.getElementById('novoPINStrength');
-  if(novoPINDigitado.length < 4){
-    indicator.textContent = `${novoPINDigitado.length}/4 dígitos`;
-    indicator.style.color = 'var(--text-gray)';
-    return;
-  }
+  const jsonString = JSON.stringify(dados, null, 2);
   
-  const digitsUnicos = new Set(novoPINDigitado.split('')).size;
-  const sequencial = /^(0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210|1111|2222|3333|4444|5555|6666|7777|8888|9999|0000)$/.test(novoPINDigitado);
-  
-  if(sequencial || digitsUnicos === 1){
-    indicator.textContent = '⚠️ PIN fraco - evite sequências ou repetições';
-    indicator.style.color = 'var(--danger-red)';
-  } else if(digitsUnicos <= 2){
-    indicator.textContent = '🟡 PIN moderado - considere mais variedade';
-    indicator.style.color = 'var(--warning-orange)';
+  // Usar a API Clipboard para copiar
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(jsonString).then(() => {
+      showToast('📋 Backup copiado para a área de transferência!', 'success', 4000);
+    }).catch(() => {
+      // Fallback para método antigo
+      copiarTextoFallback(jsonString);
+    });
   } else {
-    indicator.textContent = '✅ PIN forte!';
-    indicator.style.color = 'var(--success-green)';
+    copiarTextoFallback(jsonString);
   }
 }
 
-function confirmarPINAtual(){
+function copiarTextoFallback(texto) {
+  const areaTexto = document.createElement("textarea");
+  areaTexto.value = texto;
+  areaTexto.style.position = "fixed";
+  areaTexto.style.left = "-9999px";
+  document.body.appendChild(areaTexto);
+  areaTexto.select();
+  try {
+    document.execCommand('copy');
+    showToast('📋 Backup copiado para a área de transferência!', 'success', 4000);
+  } catch(e) {
+    showToast('❌ Falha ao copiar. Tente selecionar o texto manualmente.', 'error');
+  }
+  document.body.removeChild(areaTexto);
+}
+
+function restaurarDados() {
+  // Solicitar que o usuário cole o backup
+  if (navigator.clipboard && navigator.clipboard.readText) {
+    navigator.clipboard.readText().then(texto => {
+      processarRestauracao(texto);
+    }).catch(() => {
+      solicitarPasteManual();
+    });
+  } else {
+    solicitarPasteManual();
+  }
+}
+
+function solicitarPasteManual() {
+  const texto = prompt("📥 Cole aqui o conteúdo do backup (Ctrl+V / Cmd+V) para restaurar os dados:");
+  if (texto) {
+    processarRestauracao(texto);
+  }
+}
+
+function processarRestauracao(texto) {
+  try {
+    const dados = JSON.parse(texto);
+    if (!dados.alunos || !Array.isArray(dados.alunos)) {
+      throw new Error('Dados inválidos: estrutura de alunos não encontrada.');
+    }
+    
+    if (!confirm('🔄 Restaurar backup? Isso substituirá todos os dados atuais.')) return;
+
+    // Restaurar alunos
+    alunos = dados.alunos.map(a => ({
+      nome: a.nome,
+      turma: a.turma || "juvenil",
+      dataInicio: a.dataInicio || new Date().toISOString().split('T')[0],
+      whatsapp: a.whatsapp || "",
+      meses: a.meses?.map(m => ({
+        pago: m.pago === true,
+        diaPagamento: m.diaPagamento || null,
+        mesPagamento: m.mesPagamento || null,
+        anoPagamento: m.anoPagamento || null
+      })) || criarMesesVazios()
+    }));
+
+    // Restaurar valor da mensalidade
+    if (dados.valorMensalidade !== undefined) {
+      valorMensalidade = dados.valorMensalidade;
+      document.getElementById('valorMensalidade').value = valorMensalidade;
+      localStorage.setItem(CONFIG.STORAGE_VALOR_KEY, valorMensalidade);
+    }
+
+    // Restaurar evoluções
+    if (dados.evolucoes) {
+      evolucoes = dados.evolucoes;
+      salvarEvolucoes();
+    }
+
+    // Restaurar configurações de graduação
+    if (dados.configGraduacoes) {
+      configGraduacoes = dados.configGraduacoes;
+      salvarConfigGraduacoes();
+    }
+
+    salvarMensalidades();
+    renderizarTabela();
+    atualizarInfoPesquisa();
+    renderizarEvolucoes();
+    showToast(`✅ Backup restaurado com sucesso! ${alunos.length} alunos carregados.`, 'success', 5000);
+  } catch (err) {
+    showToast(`❌ Erro ao restaurar: ${err.message}`, 'error', 5000);
+  }
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  if (tab === 'evolucao') renderizarEvolucoes();
+}
+
+// ============================================================
+// TEMA
+// ============================================================
+function carregarTema() {
+  const tema = localStorage.getItem(CONFIG.STORAGE_THEME_KEY);
+  if (tema) document.documentElement.setAttribute('data-theme', tema);
+  atualizarBotaoTema();
+}
+
+function alternarTema() {
+  const atual = document.documentElement.getAttribute('data-theme') || 'dark';
+  const novo = atual === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', novo);
+  localStorage.setItem(CONFIG.STORAGE_THEME_KEY, novo);
+  showToast(`🌓 Tema ${novo === 'dark' ? 'escuro' : 'claro'}`, 'info', 2000);
+  atualizarBotaoTema();
+}
+
+function atualizarBotaoTema() {
+  const btn = document.getElementById('themeToggle');
+  const tema = document.documentElement.getAttribute('data-theme') || 'dark';
+  btn.textContent = tema === 'dark' ? '☀️ Claro' : '🌙 Escuro';
+  btn.onclick = alternarTema;
+}
+
+// ============================================================
+// ATALHOS DE TECLADO
+// ============================================================
+function configurarAtalhosTeclado() {
+  document.addEventListener('keydown', (e) => {
+    if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key.toLowerCase()) {
+        case 'n': e.preventDefault(); abrirModalAdicionarAluno(); showToast('⌨️ Novo Aluno', 'info', 1500); break;
+        case 'e': e.preventDefault(); abrirModalAdicionarEvolucao(); showToast('⌨️ Registrar Evolução', 'info', 1500); break;
+        case 'f': e.preventDefault(); document.getElementById('pesquisaAluno')?.focus(); showToast('⌨️ Foco na pesquisa', 'info', 1500); break;
+        case 'b': e.preventDefault(); backupDados(); break;
+        case 'r': e.preventDefault(); gerarRelatorioMensal(); break;
+      }
+    }
+    if (e.key === 'Escape') {
+      limparPesquisa();
+      fecharModalEditar();
+      fecharModalRelatorio();
+      fecharModalAlterarPIN();
+      fecharModalAdicionarAluno();
+      fecharModalAdicionarEvolucao();
+      fecharModalEditarEvolucao();
+      fecharModalConfigGraduacoes();
+    }
+  });
+}
+
+// ============================================================
+// MÁSCARA WHATSAPP
+// ============================================================
+function configurarMascaraWhatsapp() {
+  const aplicar = (input) => {
+    let valor = input.value.replace(/\D/g, '');
+    if (valor.length <= 10) valor = valor.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
+    else valor = valor.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
+    input.value = valor.slice(0, 15);
+  };
+  ['whatsappAluno', 'whatsappAlunoMensalidade', 'editWhatsapp'].forEach(id => {
+    const i = document.getElementById(id);
+    if (i) {
+      i.addEventListener('input', () => aplicar(i));
+      i.addEventListener('blur', () => {
+        i.dataset.raw = i.value.replace(/\D/g, '');
+      });
+    }
+  });
+}
+
+// ============================================================
+// LOGIN E PIN
+// ============================================================
+function verificarPIN() {
+  const pinSalvo = localStorage.getItem(CONFIG.STORAGE_PIN_KEY) || CONFIG.PIN_PADRAO;
+  const errorEl = document.getElementById('loginError');
+  if (pinDigitado === pinSalvo) {
+    errorEl.textContent = '';
+    document.getElementById('modalLogin').classList.remove('active');
+    document.getElementById('mainDashboard').style.display = 'block';
+    carregarDadosMensalidades();
+    carregarEvolucoes();
+    carregarConfigGraduacoes();
+    carregarValorMensalidade();
+    renderizarTabela();
+    atualizarInfoPesquisa();
+    renderizarEvolucoes();
+    showToast('🥋 Bem-vindo ao Dojo Impacto Social!', 'success', 3000);
+  } else {
+    errorEl.textContent = '❌ PIN incorreto. Tente novamente.';
+    pinDigitado = '';
+    document.querySelectorAll('.pin-digit').forEach(input => input.value = '');
+    document.querySelector('.pin-digit[data-index="0"]').focus();
+    showToast('🔒 Acesso negado', 'error');
+  }
+}
+
+function configurarInputsPIN() {
+  const inputs = document.querySelectorAll('.pin-digit');
+  inputs.forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      const valor = e.target.value.replace(/\D/g, '');
+      if (valor) {
+        pinDigitado += valor;
+        if (index < inputs.length - 1) inputs[index + 1].focus();
+        if (pinDigitado.length === 4) verificarPIN();
+      }
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !e.target.value && index > 0) {
+        pinDigitado = pinDigitado.slice(0, -1);
+        inputs[index - 1].focus();
+      }
+    });
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData).getData('text');
+      const numeros = paste.replace(/\D/g, '').slice(0, 4);
+      pinDigitado = numeros;
+      numeros.split('').forEach((num, i) => {
+        if (inputs[i]) inputs[i].value = num;
+      });
+      if (numeros.length === 4) verificarPIN();
+    });
+  });
+}
+
+function redefinirPIN(e) {
+  e.preventDefault();
+  if (confirm('Redefinir PIN para 1234?')) {
+    localStorage.removeItem(CONFIG.STORAGE_PIN_KEY);
+    location.reload();
+  }
+}
+
+function confirmarPINAtual() {
   const pinSalvo = localStorage.getItem(CONFIG.STORAGE_PIN_KEY) || CONFIG.PIN_PADRAO;
   const errorEl = document.getElementById('errorConfirmarPIN');
-  
-  if(pinAtualDigitado === pinSalvo){
+
+  if (pinAtualDigitado === pinSalvo) {
     errorEl.textContent = '';
     document.getElementById('stepAtual').style.display = 'none';
     document.getElementById('stepNovoPIN').style.display = 'block';
     document.getElementById('btnVoltarStep').style.display = 'inline-flex';
     stepAtual = 2;
-    
     setTimeout(() => {
       document.querySelector('.pin-digit-novo[data-index="0"]').focus();
     }, 100);
@@ -1552,35 +3097,32 @@ function confirmarPINAtual(){
   }
 }
 
-function avançarParaConfirmacao(){
-  if(novoPINDigitado.length !== 4){
+function avançarParaConfirmacao() {
+  if (novoPINDigitado.length !== 4) {
     showToast('⚠️ Digite os 4 dígitos do novo PIN', 'warning');
     return;
   }
-  
-  if(!/^\d{4}$/.test(novoPINDigitado)){
+  if (!/^\d{4}$/.test(novoPINDigitado)) {
     showToast('❌ PIN deve conter apenas 4 números', 'error');
     return;
   }
-  
   document.getElementById('stepNovoPIN').style.display = 'none';
   document.getElementById('stepConfirmarNovo').style.display = 'block';
   stepAtual = 3;
-  
   setTimeout(() => {
     document.querySelector('.pin-digit-confirmacao[data-index="0"]').focus();
   }, 100);
 }
 
-function salvarNovoPIN(){
+function salvarNovoPIN() {
   const errorEl = document.getElementById('errorConfirmarNovo');
-  
-  if(confirmacaoPINDigitado.length !== 4){
+
+  if (confirmacaoPINDigitado.length !== 4) {
     errorEl.textContent = '❌ Confirme os 4 dígitos do novo PIN';
     return;
   }
-  
-  if(novoPINDigitado !== confirmacaoPINDigitado){
+
+  if (novoPINDigitado !== confirmacaoPINDigitado) {
     errorEl.textContent = '❌ Os PINs não conferem. Tente novamente.';
     confirmacaoPINDigitado = '';
     document.querySelectorAll('.pin-digit-confirmacao').forEach(input => input.value = '');
@@ -1588,27 +3130,26 @@ function salvarNovoPIN(){
     showToast('⚠️ PINs não coincidem', 'warning');
     return;
   }
-  
+
   const pinSalvo = localStorage.getItem(CONFIG.STORAGE_PIN_KEY) || CONFIG.PIN_PADRAO;
-  if(novoPINDigitado === pinSalvo){
+  if (novoPINDigitado === pinSalvo) {
     errorEl.textContent = '⚠️ Novo PIN igual ao atual. Escolha outro.';
     showToast('🔄 Escolha um PIN diferente do atual', 'info');
     return;
   }
-  
+
   localStorage.setItem(CONFIG.STORAGE_PIN_KEY, novoPINDigitado);
-  
   fecharModalAlterarPIN();
-  showToast('✅ PIN alterado com sucesso! Use seu novo PIN no próximo acesso.', 'success', 5000);
-  
+  showToast('✅ PIN alterado com sucesso!', 'success', 5000);
+
   pinAtualDigitado = "";
   novoPINDigitado = "";
   confirmacaoPINDigitado = "";
   stepAtual = 1;
 }
 
-function voltarStep(){
-  if(stepAtual === 2){
+function voltarStep() {
+  if (stepAtual === 2) {
     document.getElementById('stepNovoPIN').style.display = 'none';
     document.getElementById('stepAtual').style.display = 'block';
     document.getElementById('btnVoltarStep').style.display = 'none';
@@ -1616,7 +3157,7 @@ function voltarStep(){
     novoPINDigitado = '';
     document.querySelectorAll('.pin-digit-novo').forEach(input => input.value = '');
     document.querySelector('.pin-digit-confirm[data-index="0"]').focus();
-  } else if(stepAtual === 3){
+  } else if (stepAtual === 3) {
     document.getElementById('stepConfirmarNovo').style.display = 'none';
     document.getElementById('stepNovoPIN').style.display = 'block';
     stepAtual = 2;
@@ -1626,184 +3167,140 @@ function voltarStep(){
   }
 }
 
-document.addEventListener('DOMContentLoaded',()=>{ 
-  const hoje=new Date().toISOString().split('T')[0]; 
-  document.getElementById('dataInicio').value=hoje; 
-  document.getElementById('anoAtual').textContent=new Date().getFullYear(); 
-  carregarValorMensalidade(); 
-  carregarTema(); 
-  verificarLogin(); 
-  configurarAtalhosTeclado(); 
-  configurarMascaraWhatsapp(); 
-  configurarInputsPIN(); 
+function configurarInputsAlteracaoPIN() {
+  document.querySelectorAll('.pin-digit-confirm').forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      const valor = e.target.value.replace(/\D/g, '');
+      if (valor) {
+        pinAtualDigitado += valor;
+        if (index < 3) document.querySelectorAll('.pin-digit-confirm')[index + 1].focus();
+        if (pinAtualDigitado.length === 4) confirmarPINAtual();
+      }
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !e.target.value && index > 0) {
+        pinAtualDigitado = pinAtualDigitado.slice(0, -1);
+        document.querySelectorAll('.pin-digit-confirm')[index - 1].focus();
+      }
+    });
+  });
+
+  document.querySelectorAll('.pin-digit-novo').forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      const valor = e.target.value.replace(/\D/g, '');
+      if (valor) {
+        novoPINDigitado += valor;
+        if (index < 3) document.querySelectorAll('.pin-digit-novo')[index + 1].focus();
+        if (novoPINDigitado.length === 4) {
+          setTimeout(() => avançarParaConfirmacao(), 300);
+        }
+      }
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !e.target.value && index > 0) {
+        novoPINDigitado = novoPINDigitado.slice(0, -1);
+        document.querySelectorAll('.pin-digit-novo')[index - 1].focus();
+      }
+    });
+  });
+
+  document.querySelectorAll('.pin-digit-confirmacao').forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      const valor = e.target.value.replace(/\D/g, '');
+      if (valor) {
+        confirmacaoPINDigitado += valor;
+        if (index < 3) document.querySelectorAll('.pin-digit-confirmacao')[index + 1].focus();
+        if (confirmacaoPINDigitado.length === 4) salvarNovoPIN();
+      }
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !e.target.value && index > 0) {
+        confirmacaoPINDigitado = confirmacaoPINDigitado.slice(0, -1);
+        document.querySelectorAll('.pin-digit-confirmacao')[index - 1].focus();
+      }
+    });
+  });
+}
+
+// ============================================================
+// INICIALIZAÇÃO
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('anoAtual').textContent = new Date().getFullYear();
+  document.getElementById('dataInicio').value = new Date().toISOString().split('T')[0];
+  document.getElementById('dataInicioMensalidade').value = new Date().toISOString().split('T')[0];
+
+  carregarTema();
+  verificarLogin();
+  configurarAtalhosTeclado();
+  configurarMascaraWhatsapp();
+  configurarInputsPIN();
   configurarInputsAlteracaoPIN();
-  
-  document.getElementById('pesquisaAluno').addEventListener('input',()=>{ 
-    if(pesquisaTimeout) clearTimeout(pesquisaTimeout); 
-    pesquisaTimeout=setTimeout(()=>pesquisarAluno(),300); 
-  }); 
+
+  document.getElementById('pesquisaAluno').addEventListener('input', () => {
+    if (pesquisaTimeout) clearTimeout(pesquisaTimeout);
+    pesquisaTimeout = setTimeout(() => pesquisarAluno(), 300);
+  });
 });
 
-function verificarLogin(){ 
-  const pinSalvo=localStorage.getItem(CONFIG.STORAGE_PIN_KEY); 
-  if(!pinSalvo) localStorage.setItem(CONFIG.STORAGE_PIN_KEY,CONFIG.PIN_PADRAO); 
-  document.getElementById('modalLogin').classList.add('active'); 
+function verificarLogin() {
+  const pinSalvo = localStorage.getItem(CONFIG.STORAGE_PIN_KEY);
+  if (!pinSalvo) localStorage.setItem(CONFIG.STORAGE_PIN_KEY, CONFIG.PIN_PADRAO);
+  document.getElementById('modalLogin').classList.add('active');
 }
 
-function configurarInputsPIN(){ 
-  const inputs=document.querySelectorAll('.pin-digit'); 
-  inputs.forEach((input,index)=>{ 
-    input.addEventListener('input',(e)=>{ 
-      const valor=e.target.value.replace(/\D/g,''); 
-      if(valor){ 
-        pinDigitado+=valor; 
-        if(index<inputs.length-1) inputs[index+1].focus(); 
-        if(pinDigitado.length===4) verificarPIN(); 
-      } 
-    }); 
-    input.addEventListener('keydown',(e)=>{ 
-      if(e.key==='Backspace' && !e.target.value && index>0){ 
-        pinDigitado=pinDigitado.slice(0,-1); 
-        inputs[index-1].focus(); 
-      } 
-    }); 
-    input.addEventListener('paste',(e)=>{ 
-      e.preventDefault(); 
-      const paste=(e.clipboardData||window.clipboardData).getData('text'); 
-      const numeros=paste.replace(/\D/g,'').slice(0,4); 
-      pinDigitado=numeros; 
-      numeros.split('').forEach((num,i)=>{ 
-        if(inputs[i]) inputs[i].value=num; 
-      }); 
-      if(numeros.length===4) verificarPIN(); 
-    }); 
-  }); 
-}
+// ============================================================
+// EXPORTAÇÃO GLOBAL (para os onclick)
+// ============================================================
+window.adicionarAlunoMensalidade = adicionarAlunoMensalidade;
+window.removerAluno = removerAluno;
+window.editarAluno = editarAluno;
+window.fecharModalEditar = fecharModalEditar;
+window.salvarEdicao = salvarEdicao;
+window.togglePagamento = togglePagamento;
+window.atualizarDataPagamento = atualizarDataPagamento;
+window.enviarCobrancaWhatsApp = enviarCobrancaWhatsApp;
+window.marcarTodosPagos = marcarTodosPagos;
+window.cobrarPendentes = cobrarPendentes;
+window.pesquisarAluno = pesquisarAluno;
+window.limparPesquisa = limparPesquisa;
+window.aplicarFiltroStatus = aplicarFiltroStatus;
+window.atualizarValorMensalidade = atualizarValorMensalidade;
+window.exportarCSV = exportarCSV;
+window.gerarRelatorioMensal = gerarRelatorioMensal;
+window.fecharModalRelatorio = fecharModalRelatorio;
+window.atualizarRelatorioPorPeriodo = atualizarRelatorioPorPeriodo;
+window.exportarPDF = exportarPDF;
 
-function verificarPIN(){ 
-  const pinSalvo=localStorage.getItem(CONFIG.STORAGE_PIN_KEY)||CONFIG.PIN_PADRAO; 
-  const errorEl=document.getElementById('loginError'); 
-  if(pinDigitado===pinSalvo){ 
-    errorEl.textContent=''; 
-    document.getElementById('modalLogin').classList.remove('active'); 
-    document.getElementById('mainDashboard').style.display='block'; 
-    carregarDados(); 
-    renderizarTabela(); 
-    atualizarInfoPesquisa(); 
-    showToast('🥋 Bem-vindo ao Dojo Impacto Social!', 'success', 3000); 
-  } else { 
-    errorEl.textContent='❌ PIN incorreto. Tente novamente.'; 
-    pinDigitado=''; 
-    document.querySelectorAll('.pin-digit').forEach(input=>input.value=''); 
-    document.querySelector('.pin-digit[data-index="0"]').focus(); 
-    showToast('🔒 Acesso negado', 'error'); 
-  } 
-}
+window.abrirModalAdicionarAluno = abrirModalAdicionarAluno;
+window.fecharModalAdicionarAluno = fecharModalAdicionarAluno;
+window.adicionarAluno = adicionarAluno;
+window.abrirModalAdicionarEvolucao = abrirModalAdicionarEvolucao;
+window.salvarNovaEvolucao = salvarNovaEvolucao;
+window.fecharModalAdicionarEvolucao = fecharModalAdicionarEvolucao;
+window.abrirModalEditarEvolucao = abrirModalEditarEvolucao;
+window.salvarEdicaoEvolucao = salvarEdicaoEvolucao;
+window.fecharModalEditarEvolucao = fecharModalEditarEvolucao;
+window.promoverAluno = promoverAluno;
+window.verTodasEvolucoes = verTodasEvolucoes;
+window.excluirEvolucao = excluirEvolucao;
+window.abrirModalConfigGraduacoes = abrirModalConfigGraduacoes;
+window.fecharModalConfigGraduacoes = fecharModalConfigGraduacoes;
+window.salvarConfigGraduacoesModal = salvarConfigGraduacoesModal;
+window.restaurarConfigGraduacoes = restaurarConfigGraduacoes;
+window.backupDados = backupDados;
+window.restaurarDados = restaurarDados;
 
-function showToast(msg,tipo='info',duracao=3000){ 
-  const c=document.getElementById('toastContainer'); 
-  const t=document.createElement('div'); 
-  const ic={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'}; 
-  t.className=`toast ${tipo}`; 
-  t.innerHTML=`<span>${ic[tipo]||'ℹ️'}</span><span>${msg}</span>`; 
-  c.appendChild(t); 
-  setTimeout(()=>{ 
-    t.style.animation='fadeOut 0.3s ease forwards'; 
-    setTimeout(()=>t.remove(),300); 
-  },duracao); 
-  t.onclick=()=>t.remove(); 
-}
+window.verificarPIN = verificarPIN;
+window.redefinirPIN = redefinirPIN;
+window.alternarTema = alternarTema;
+window.switchTab = switchTab;
+window.confirmarPINAtual = confirmarPINAtual;
+window.avançarParaConfirmacao = avançarParaConfirmacao;
+window.salvarNovoPIN = salvarNovoPIN;
+window.voltarStep = voltarStep;
+window.fecharModalAlterarPIN = fecharModalAlterarPIN;
 
-function carregarTema(){ 
-  const tema=localStorage.getItem(CONFIG.STORAGE_THEME_KEY); 
-  if(tema) document.documentElement.setAttribute('data-theme',tema); 
-  atualizarBotaoTema(); 
-}
-
-function alternarTema(){ 
-  const atual=document.documentElement.getAttribute('data-theme')||'dark'; 
-  const novo=atual==='dark'?'light':'dark'; 
-  document.documentElement.setAttribute('data-theme',novo); 
-  localStorage.setItem(CONFIG.STORAGE_THEME_KEY,novo); 
-  showToast(`🌓 Tema ${novo==='dark'?'escuro':'claro'}`, 'info',2000); 
-  atualizarBotaoTema(); 
-}
-
-function atualizarBotaoTema(){ 
-  const btn=document.getElementById('themeToggle'); 
-  const tema=document.documentElement.getAttribute('data-theme')||'dark'; 
-  btn.textContent=tema==='dark'?'☀️ Claro':'🌙 Escuro'; 
-  btn.onclick=alternarTema; 
-}
-
-function configurarAtalhosTeclado(){ 
-  document.addEventListener('keydown',(e)=>{ 
-    if(['INPUT','TEXTAREA'].includes(e.target.tagName)) return; 
-    if(e.ctrlKey||e.metaKey){ 
-      switch(e.key.toLowerCase()){ 
-        case 'n': e.preventDefault(); document.getElementById('nomeAluno').focus(); showToast('⌨️ Foco no nome','info',1500); break; 
-        case 'f': e.preventDefault(); document.getElementById('pesquisaAluno').focus(); showToast('⌨️ Foco na pesquisa','info',1500); break; 
-        case 'e': e.preventDefault(); exportarCSV(); break; 
-        case 'b': e.preventDefault(); backupDados(); break; 
-        case 'r': e.preventDefault(); gerarRelatorioMensal(); break; 
-      } 
-    } 
-    if(e.key==='Escape'){ 
-      limparPesquisa(); 
-      fecharModalEditar(); 
-      fecharModalRelatorio();
-      fecharModalAlterarPIN();
-    } 
-  }); 
-}
-
-function configurarMascaraWhatsapp(){ 
-  const aplicar=(input)=>{ 
-    let valor=input.value.replace(/\D/g,''); 
-    if(valor.length<=10) valor=valor.replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2'); 
-    else valor=valor.replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2'); 
-    input.value=valor.slice(0,15); 
-  }; 
-  ['whatsappAluno','editWhatsapp'].forEach(id=>{ 
-    const i=document.getElementById(id); 
-    if(i){ 
-      i.addEventListener('input',()=>aplicar(i)); 
-      i.addEventListener('blur',()=>{ 
-        i.dataset.raw=i.value.replace(/\D/g,''); 
-      }); 
-    } 
-  }); 
-}
-
-window.adicionarAluno=adicionarAluno; 
-window.exportarCSV=exportarCSV; 
-window.removerAluno=removerAluno; 
-window.enviarCobrancaWhatsApp=enviarCobrancaWhatsApp; 
-window.editarAluno=editarAluno; 
-window.fecharModalEditar=fecharModalEditar; 
-window.salvarEdicao=salvarEdicao; 
-window.togglePagamento=togglePagamento; 
-window.atualizarDataPagamento=atualizarDataPagamento; 
-window.pesquisarAluno=pesquisarAluno; 
-window.limparPesquisa=limparPesquisa; 
-window.aplicarFiltroStatus=aplicarFiltroStatus; 
-window.atualizarValorMensalidade=atualizarValorMensalidade; 
-window.backupDados=backupDados; 
-window.restaurarDados=restaurarDados; 
-window.verificarPIN=verificarPIN; 
-window.redefinirPIN=redefinirPIN; 
-window.alternarTema=alternarTema; 
-window.gerarRelatorioMensal=gerarRelatorioMensal; 
-window.fecharModalRelatorio=fecharModalRelatorio; 
-window.exportarPDF=exportarPDF; 
-window.marcarTodosPagos=marcarTodosPagos; 
-window.cobrarPendentes=cobrarPendentes; 
-window.atualizarRelatorioPorPeriodo=atualizarRelatorioPorPeriodo; 
-window.fecharModalAlterarPIN=fecharModalAlterarPIN;
-window.confirmarPINAtual=confirmarPINAtual;
-window.avançarParaConfirmacao=avançarParaConfirmacao;
-window.salvarNovoPIN=salvarNovoPIN;
-window.voltarStep=voltarStep;
 atualizarBotaoTema();
 </script>
 </body>
