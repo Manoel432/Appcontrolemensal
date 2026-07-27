@@ -1201,10 +1201,15 @@
       max-width: 420px;
       text-align: center;
     }
-    .login-modal .logo {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-      display: block;
+    .login-modal .logo-img {
+      width: 120px;
+      margin-bottom: 15px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      display: inline-block;
+    }
+    .login-modal .logo-img[style*="display:none"] {
+      display: none !important;
     }
     .login-modal h3 {
       margin-bottom: 0.5rem;
@@ -1634,7 +1639,7 @@
 <!-- Modal Login -->
 <div id="modalLogin" class="modal login-modal">
   <div class="modal-content">
-    <span class="logo">🥋</span>
+    <img src="logo.png" class="logo-img" style="width:120px; margin-bottom:15px; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.5);" onerror="this.style.display='none'">
     <h3>Dojo Impacto Social</h3>
     <p>Digite seu PIN de acesso para continuar</p>
     <div class="login-error" id="loginError"></div>
