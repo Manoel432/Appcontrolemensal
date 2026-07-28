@@ -868,8 +868,8 @@
       padding: 4px 14px;
       border-radius: 20px;
       background: rgba(255, 255, 255, 0.2);
+      color: var(--accent-gold);
       border: 1px solid rgba(255, 215, 0, 0.3);
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
 
     .evolution-card .card-body {
@@ -1886,18 +1886,6 @@ const CONFIG = {
   GRADUACOES: ['Branca', 'Amarela', 'Vermelha', 'Laranja', 'Verde', 'Roxa', 'Marrom', 'Preta']
 };
 
-// Mapeamento de cores para cada faixa
-const CORES_FAIXA = {
-  'Branca': '#f5f5f5',
-  'Amarela': '#ffd700',
-  'Vermelha': '#e53935',
-  'Laranja': '#ff9800',
-  'Verde': '#4caf50',
-  'Roxa': '#9c27b0',
-  'Marrom': '#795548',
-  'Preta': '#212121'
-};
-
 let alunos = [];
 let evolucoes = [];
 let configGraduacoes = {};
@@ -2264,20 +2252,12 @@ function renderizarEvolucoes() {
       `;
     }
 
-    // Cor da faixa
-    const corFaixa = CORES_FAIXA[graduacaoAtual] || '#ffffff';
-    // Para faixa preta, usar texto branco com fundo preto para contraste, ou apenas texto preto com fundo claro? Vou manter texto com a cor, mas se for preta, usar #fff com fundo preto.
-    let badgeStyle = `color: ${corFaixa};`;
-    if (graduacaoAtual === 'Preta') {
-      badgeStyle = `color: #fff; background: #212121; border-color: #555;`;
-    }
-
     const card = document.createElement('div');
     card.className = 'evolution-card';
     card.innerHTML = `
       <div class="card-header">
         <span class="aluno-nome">${aluno.nome}</span>
-        <span class="graduacao-badge" style="${badgeStyle}">${graduacaoAtual}</span>
+        <span class="graduacao-badge">${graduacaoAtual}</span>
       </div>
       <div class="card-body">
         <div class="info-row">
