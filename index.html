@@ -2252,24 +2252,17 @@ function renderizarEvolucoes() {
       `;
     }
 
-    const turmaEmoji = { infantil: '👶', juvenil: '🧑', adulto: '💪' }[aluno.turma] || '🥋';
-    const turmaLabel = { infantil: 'Infantil', juvenil: 'Juvenil', adulto: 'Adulto' }[aluno.turma] || aluno.turma;
-
     const card = document.createElement('div');
     card.className = 'evolution-card';
     card.innerHTML = `
       <div class="card-header">
-        <span class="aluno-nome">${aluno.nome} <span style="font-size:0.65rem;font-weight:400;">${turmaEmoji} ${turmaLabel}</span></span>
+        <span class="aluno-nome">${aluno.nome}</span>
         <span class="graduacao-badge">${graduacaoAtual}</span>
       </div>
       <div class="card-body">
         <div class="info-row">
           <span class="label">📅 Última Graduação</span>
           <span class="value">${formatarDataBR(dataUltima)}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">📱 WhatsApp</span>
-          <span class="value">${aluno.whatsapp ? formatarWhatsApp(aluno.whatsapp) : 'Não cadastrado'}</span>
         </div>
         <div class="info-row">
           <span class="label">➡️ Próxima Graduação</span>
